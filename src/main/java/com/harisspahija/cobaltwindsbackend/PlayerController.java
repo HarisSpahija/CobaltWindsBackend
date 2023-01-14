@@ -6,6 +6,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.time.LocalDate;
 import java.util.ArrayList;
+import java.util.Optional;
 import java.util.UUID;
 
 @RestController
@@ -17,6 +18,11 @@ public class PlayerController {
     Player sampleFillPlayer = new Player("Haris", LocalDate.of(1996, 11, 30), Role.Fill, Role.Support, "https://www.op.gg/summoners/euw/Beedle", true);
 
     public PlayerController() {
+        sampleTopPlayer.setId("1");
+        sampleMiddlePlayer.setId("2");
+        sampleBotPlayer.setId("3");
+        sampleFillPlayer.setId("4");
+
         this.players.add(sampleTopPlayer);
         this.players.add(sampleMiddlePlayer);
         this.players.add(sampleBotPlayer);
@@ -29,19 +35,21 @@ public class PlayerController {
     }
 
     @GetMapping("/player/{id}")
-    public Player getPlayer(@PathVariable String id) {
-        for (Player player : players) {
-            if (player.getId().equals(id)) {
-                return player;
-            }
+    public ResponseEntity<Object> getPlayer(@PathVariable String id) {
+        Optional<Player> player = players.stream()
+                .filter(p -> p.getId().equals(id))
+                .findFirst();
+
+        if (player.isPresent()) {
+            return new ResponseEntity<>(player.get(), HttpStatus.OK);
         }
-        throw new PlayerNotFoundException();
+        return new ResponseEntity<>("Player not found with id: " + id, HttpStatus.NOT_FOUND);
     }
 
     @PostMapping("/player")
-    public ResponseEntity<Player> createPlayer(@RequestBody Player player) {
+    public ResponseEntity<Object> createPlayer(@RequestBody Player player) {
         if (player.hasDuplicateRole()) {
-            throw new PlayerDuplicateRoleException();
+            return new ResponseEntity<>("A player cannot have the same role for primary and secondary. Please choose a different role for primary and secondary.", HttpStatus.BAD_REQUEST);
         }
         player.setId(UUID.randomUUID().toString());
         players.add(player);
@@ -49,10 +57,10 @@ public class PlayerController {
     }
 
     @PutMapping("/player/{id}")
-    public Player updatePlayer(@PathVariable String id, @RequestBody Player updatedPlayer) {
+    public ResponseEntity<Object> updatePlayer(@PathVariable String id, @RequestBody Player updatedPlayer) {
         if (updatedPlayer.hasDuplicateRole())
         {
-            throw new PlayerDuplicateRoleException();
+            return new ResponseEntity<>("A player cannot have the same role for primary and secondary. Please choose a different role for primary and secondary.", HttpStatus.BAD_REQUEST);
         }
 
         for (Player player : players) {
@@ -63,9 +71,9 @@ public class PlayerController {
                 player.setSecondaryRole(updatedPlayer.getSecondaryRole());
                 player.setOpggLink(updatedPlayer.getOpggLink());
                 player.setFreeAgent(updatedPlayer.getFreeAgent());
-                return player;
+                return new ResponseEntity<>(player, HttpStatus.OK);
             }
         }
-        throw new PlayerNotFoundException();
+        return new ResponseEntity<>("Player not found with id: " + id, HttpStatus.NOT_FOUND);
     }
 }
