@@ -1,8 +1,10 @@
 package com.harisspahija.cobaltwindsbackend;
 
 import java.time.LocalDate;
+import java.util.UUID;
 
 public class Player {
+    private String id;
     private String name;
 
     private LocalDate dateOfBirth;
@@ -12,14 +14,19 @@ public class Player {
     private Boolean freeAgent;
 
     public Player(String name, LocalDate dateOfBirth, Role primaryRole, Role secondaryRole, String opggLink, Boolean freeAgent) {
+        this.id = UUID.randomUUID().toString();
         this.name = name;
         this.dateOfBirth = dateOfBirth;
         this.primaryRole = primaryRole;
-        this.secondaryRole = secondaryRole;
+        if (primaryRole != Role.Fill) {
+            this.secondaryRole = secondaryRole;
+        }
         this.opggLink = opggLink;
         this.freeAgent = freeAgent;
     }
 
+    public void setId(String id) { this.id = id; }
+    public String getId() { return id; }
     public String getName() {
         return name;
     }
@@ -42,6 +49,9 @@ public class Player {
 
     public void setPrimaryRole(Role primaryRole) {
         this.primaryRole = primaryRole;
+        if (primaryRole == Role.Fill) {
+            this.secondaryRole = null;
+        }
     }
 
     public Role getSecondaryRole() {

@@ -1,9 +1,12 @@
 package com.harisspahija.cobaltwindsbackend;
 
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.time.LocalDate;
 import java.util.ArrayList;
+import java.util.UUID;
 
 @RestController
 public class PlayerController {
@@ -20,13 +23,46 @@ public class PlayerController {
         this.players.add(sampleFillPlayer);
     }
 
-    @GetMapping("/players")
-    public ArrayList<Player> getPlayers() {
+    @GetMapping("/player")
+    ArrayList<Player> getPlayers() {
         return this.players;
     }
 
+    @GetMapping("/player/{id}")
+    public Player getPlayer(@PathVariable String id) {
+        for (Player player : players) {
+            if (player.getId().equals(id)) {
+                return player;
+            }
+        }
+        throw new PlayerNotFoundException();
+    }
+
     @PostMapping("/player")
-    public Player addPlayer(@RequestBody Player player) {
-        return player;
+    public ResponseEntity<Player> createPlayer(@RequestBody Player player) {
+        player.setId(UUID.randomUUID().toString());
+        players.add(player);
+        return new ResponseEntity<>(player, HttpStatus.CREATED);
+    }
+
+    @PutMapping("/player/{id}")
+    public Player updatePlayer(@PathVariable String id, @RequestBody Player updatedPlayer) {
+        if (updatedPlayer.getPrimaryRole() == updatedPlayer.getSecondaryRole())
+        {
+            throw new PlayerDuplicateRoleException();
+        }
+
+        for (Player player : players) {
+            if (player.getId().equals(id)) {
+                player.setName(updatedPlayer.getName());
+                player.setDateOfBirth(updatedPlayer.getDateOfBirth());
+                player.setPrimaryRole(updatedPlayer.getPrimaryRole());
+                player.setSecondaryRole(updatedPlayer.getSecondaryRole());
+                player.setOpggLink(updatedPlayer.getOpggLink());
+                player.setFreeAgent(updatedPlayer.getFreeAgent());
+                return player;
+            }
+        }
+        throw new PlayerNotFoundException();
     }
 }
