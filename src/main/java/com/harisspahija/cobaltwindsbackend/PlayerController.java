@@ -40,6 +40,9 @@ public class PlayerController {
 
     @PostMapping("/player")
     public ResponseEntity<Player> createPlayer(@RequestBody Player player) {
+        if (player.hasDuplicateRole()) {
+            throw new PlayerDuplicateRoleException();
+        }
         player.setId(UUID.randomUUID().toString());
         players.add(player);
         return new ResponseEntity<>(player, HttpStatus.CREATED);
@@ -47,7 +50,7 @@ public class PlayerController {
 
     @PutMapping("/player/{id}")
     public Player updatePlayer(@PathVariable String id, @RequestBody Player updatedPlayer) {
-        if (updatedPlayer.getPrimaryRole() == updatedPlayer.getSecondaryRole())
+        if (updatedPlayer.hasDuplicateRole())
         {
             throw new PlayerDuplicateRoleException();
         }

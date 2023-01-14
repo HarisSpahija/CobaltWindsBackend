@@ -54,6 +54,10 @@ public class Player {
         }
     }
 
+    public Boolean hasDuplicateRole() {
+        return this.primaryRole == this.secondaryRole;
+    }
+
     public Role getSecondaryRole() {
         return secondaryRole;
     }
