@@ -14,7 +14,7 @@ import java.util.Optional;
 @RestController
 public class PlayerController {
     @Autowired
-    PlayerRepository playerRepository;
+    private PlayerRepository playerRepository;
 
     @GetMapping("/players")
     public ResponseEntity<List<Player>> getAllPlayers() {
