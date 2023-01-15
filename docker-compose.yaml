@@ -1,0 +1,16 @@
+version: "3.8"
+x-project-name: cobaltwindsbackend
+services:
+  mssql:
+    build:
+      context: ./
+      dockerfile: mssql.Dockerfile
+    ports:
+      - '1433:1433'
+    volumes:
+      - mssql:/var/opt/cobaltwinds/mssql
+    cap_add:
+      - SYS_PTRACE
+volumes:
+  mssql:
+    driver: local
