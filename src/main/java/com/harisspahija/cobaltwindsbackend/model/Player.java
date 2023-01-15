@@ -12,6 +12,7 @@ public class Player {
     @Id
     @GenericGenerator(name = "uuid", strategy = "uuid2")
     @GeneratedValue(generator = "uuid")
+    @SuppressWarnings("unused")
     private String id;
 
     @Column(name = "name")
