@@ -53,6 +53,9 @@ public class PlayerController {
 
     @PostMapping("/players")
     public ResponseEntity<Object> createPlayer(@RequestBody Player player) {
+        if (player.hasDuplicateRole())
+            return new ResponseEntity<>("player can not have duplicate roles", HttpStatus.BAD_REQUEST);
+
         try {
             Player _player = playerRepository.save(new Player(player.getName(), player.getDateOfBirth(), player.getPrimaryRole(), player.getSecondaryRole(), player.getOpggLink(), player.getFreeAgent()));
             return new ResponseEntity<>(_player, HttpStatus.CREATED);
