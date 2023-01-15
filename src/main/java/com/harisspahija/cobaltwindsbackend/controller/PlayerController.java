@@ -6,7 +6,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
+import java.net.URI;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -58,7 +60,13 @@ public class PlayerController {
 
         try {
             Player _player = playerRepository.save(new Player(player.getName(), player.getDateOfBirth(), player.getPrimaryRole(), player.getSecondaryRole(), player.getOpggLink(), player.getFreeAgent()));
-            return new ResponseEntity<>(_player, HttpStatus.CREATED);
+
+            URI location = ServletUriComponentsBuilder.fromCurrentRequest()
+                    .path("/{id}")
+                    .buildAndExpand(_player.getId())
+                    .toUri();
+
+            return ResponseEntity.created(location).body(_player);
         } catch (Exception e) {
             return new ResponseEntity<>(e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
         }

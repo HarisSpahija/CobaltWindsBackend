@@ -45,6 +45,7 @@ public class Player {
         this.freeAgent = freeAgent;
     }
 
+    public String getId() { return id; }
     public String getName() {
         return name;
     }
