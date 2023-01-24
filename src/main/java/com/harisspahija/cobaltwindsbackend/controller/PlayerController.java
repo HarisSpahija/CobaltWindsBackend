@@ -1,5 +1,8 @@
 package com.harisspahija.cobaltwindsbackend.controller;
 
+import com.harisspahija.cobaltwindsbackend.exception.RepositoryException;
+import com.harisspahija.cobaltwindsbackend.exception.PlayerHasDuplicateRoleException;
+import com.harisspahija.cobaltwindsbackend.exception.PlayerNotFoundException;
 import com.harisspahija.cobaltwindsbackend.model.Player;
 import com.harisspahija.cobaltwindsbackend.repository.PlayerRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -25,7 +28,7 @@ public class PlayerController {
 
             return new ResponseEntity<>(players, HttpStatus.OK);
         } catch (Exception e) {
-            return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);
+            throw new RepositoryException();
         }
     }
 
@@ -39,7 +42,7 @@ public class PlayerController {
             }
             return new ResponseEntity<>(players, HttpStatus.OK);
         } catch (Exception e) {
-            return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
+            throw new RepositoryException();
         }
     }
 
@@ -50,13 +53,13 @@ public class PlayerController {
         if (playerData.isPresent()) {
             return new ResponseEntity<>(playerData.get(), HttpStatus.OK);
         }
-        return new ResponseEntity<>("Player not found with id: " + id, HttpStatus.NOT_FOUND);
+        throw new PlayerNotFoundException(id);
     }
 
     @PostMapping("/players")
     public ResponseEntity<Object> createPlayer(@RequestBody Player player) {
         if (player.hasDuplicateRole())
-            return new ResponseEntity<>("player can not have duplicate roles", HttpStatus.BAD_REQUEST);
+            throw new PlayerHasDuplicateRoleException(player.getPrimaryRole(), player.getSecondaryRole());
 
         try {
             Player _player = playerRepository.save(new Player(
@@ -75,14 +78,14 @@ public class PlayerController {
 
             return ResponseEntity.created(location).body(_player);
         } catch (Exception e) {
-            return new ResponseEntity<>(e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
+            throw new RepositoryException();
         }
     }
 
     @PutMapping("/players/{id}")
     public ResponseEntity<Object> updatePlayer(@PathVariable("id") String id, @RequestBody Player player) {
         if (player.hasDuplicateRole())
-            return new ResponseEntity<>("player can not have duplicate roles", HttpStatus.BAD_REQUEST);
+            throw new PlayerHasDuplicateRoleException(player.getPrimaryRole(), player.getSecondaryRole());
 
         Optional<Player> playerData = playerRepository.findById(id);
 
@@ -97,17 +100,11 @@ public class PlayerController {
 
             return new ResponseEntity<>(playerRepository.save(_player), HttpStatus.OK);
         }
-        return new ResponseEntity<>("Player not found with id: " + id, HttpStatus.NOT_FOUND);
+        throw new RepositoryException();
     }
 
     @DeleteMapping("/players/{id}")
-    public ResponseEntity<Object> deletePlayer(@PathVariable("id") String id) {
-        Optional<Player> playerData = playerRepository.findById(id);
-
-        if (playerData.isPresent()) {
-            playerRepository.delete(playerData.get());
-            return new ResponseEntity<>(HttpStatus.NO_CONTENT);
-        }
-        return new ResponseEntity<>("Player not found with id: " + id, HttpStatus.NOT_FOUND);
+    void deletePlayer(@PathVariable("id") String id) {
+       playerRepository.deleteById(id);
     }
 }
