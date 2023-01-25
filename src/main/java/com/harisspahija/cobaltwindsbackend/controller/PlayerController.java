@@ -1,110 +1,68 @@
 package com.harisspahija.cobaltwindsbackend.controller;
 
-import com.harisspahija.cobaltwindsbackend.exception.RepositoryException;
-import com.harisspahija.cobaltwindsbackend.exception.PlayerHasDuplicateRoleException;
-import com.harisspahija.cobaltwindsbackend.exception.PlayerNotFoundException;
-import com.harisspahija.cobaltwindsbackend.model.Player;
-import com.harisspahija.cobaltwindsbackend.repository.PlayerRepository;
+import com.harisspahija.cobaltwindsbackend.dto.PlayerDto;
+import com.harisspahija.cobaltwindsbackend.dto.PlayerInputDto;
+import com.harisspahija.cobaltwindsbackend.service.PlayerService;
+import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 import java.net.URI;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
 @RestController
+@RequestMapping("players")
 public class PlayerController {
+
+    private final PlayerService playerService;
+
     @Autowired
-    private PlayerRepository playerRepository;
-
-    @GetMapping("/players")
-    public ResponseEntity<List<Player>> getAllPlayers() {
-        try {
-            List<Player> players = new ArrayList<>(playerRepository.findAll());
-
-            return new ResponseEntity<>(players, HttpStatus.OK);
-        } catch (Exception e) {
-            throw new RepositoryException();
-        }
+    public PlayerController(PlayerService playerService) {
+        this.playerService = playerService;
     }
 
-    @GetMapping("/players/free-agents")
-    public ResponseEntity<List<Player>> getAllFreeAgents() {
-        try {
-            List<Player> players = playerRepository.findByFreeAgent(true);
+    @GetMapping("")
+    public ResponseEntity<List<PlayerDto>> getAllPlayers(@RequestParam(value = "freeAgent", required = false) Optional<Boolean> freeAgent) {
+        List<PlayerDto> dtos;
 
-            if (players.isEmpty()) {
-                return new ResponseEntity<>(HttpStatus.NO_CONTENT);
-            }
-            return new ResponseEntity<>(players, HttpStatus.OK);
-        } catch (Exception e) {
-            throw new RepositoryException();
+        if (freeAgent.isEmpty()) {
+            dtos = playerService.getAllPlayers();
+        } else {
+            dtos = playerService.getAllPlayersByFreeAgent(freeAgent.get());
         }
+        return ResponseEntity.ok().body(dtos);
     }
 
-    @GetMapping("/players/{id}")
-    public ResponseEntity<Object> getPlayer(@PathVariable String id) {
-        Optional<Player> playerData = playerRepository.findById(id);
-
-        if (playerData.isPresent()) {
-            return new ResponseEntity<>(playerData.get(), HttpStatus.OK);
-        }
-        throw new PlayerNotFoundException(id);
+    @GetMapping("{id}")
+    public ResponseEntity<PlayerDto> getPlayer(@PathVariable("id")String id) {
+        PlayerDto player = playerService.getPlayerById(id);
+        return ResponseEntity.ok().body(player);
     }
 
-    @PostMapping("/players")
-    public ResponseEntity<Object> createPlayer(@RequestBody Player player) {
-        if (player.hasDuplicateRole())
-            throw new PlayerHasDuplicateRoleException(player.getPrimaryRole(), player.getSecondaryRole());
+    @PostMapping("")
+    public ResponseEntity<Object> createPlayer(@Valid @RequestBody PlayerInputDto playerInputDto) {
+        PlayerDto dto = playerService.createPlayer(playerInputDto);
 
-        try {
-            Player _player = playerRepository.save(new Player(
-                    player.getName(),
-                    player.getDateOfBirth(),
-                    player.getPrimaryRole(),
-                    player.getSecondaryRole(),
-                    player.getOpggLink(),
-                    player.getFreeAgent()
-            ));
+        URI location = ServletUriComponentsBuilder.fromCurrentRequest()
+                .path("/{id}")
+                .buildAndExpand(dto.getId())
+                .toUri();
 
-            URI location = ServletUriComponentsBuilder.fromCurrentRequest()
-                    .path("/{id}")
-                    .buildAndExpand(_player.getId())
-                    .toUri();
-
-            return ResponseEntity.created(location).body(_player);
-        } catch (Exception e) {
-            throw new RepositoryException();
-        }
+        return ResponseEntity.created(location).body(dto);
     }
 
-    @PutMapping("/players/{id}")
-    public ResponseEntity<Object> updatePlayer(@PathVariable("id") String id, @RequestBody Player player) {
-        if (player.hasDuplicateRole())
-            throw new PlayerHasDuplicateRoleException(player.getPrimaryRole(), player.getSecondaryRole());
-
-        Optional<Player> playerData = playerRepository.findById(id);
-
-        if (playerData.isPresent()) {
-            Player _player = playerData.get();
-            _player.setName(player.getName());
-            _player.setDateOfBirth(player.getDateOfBirth());
-            _player.setPrimaryRole(player.getPrimaryRole());
-            _player.setSecondaryRole(player.getSecondaryRole());
-            _player.setOpggLink(player.getOpggLink());
-            _player.setFreeAgent(player.getFreeAgent());
-
-            return new ResponseEntity<>(playerRepository.save(_player), HttpStatus.OK);
-        }
-        throw new RepositoryException();
+    @PutMapping("{id}")
+    public ResponseEntity<Object> updatePlayer(@PathVariable("id") String id, @Valid @RequestBody PlayerInputDto playerInputDto) {
+        PlayerDto dto = playerService.updatePlayer(id, playerInputDto);
+        return ResponseEntity.ok().body(dto);
     }
 
-    @DeleteMapping("/players/{id}")
-    void deletePlayer(@PathVariable("id") String id) {
-       playerRepository.deleteById(id);
+    @DeleteMapping("{id}")
+    public ResponseEntity<Object> deletePlayer(@PathVariable("id") String id) {
+        playerService.deletePlayerById(id);
+        return ResponseEntity.noContent().build();
     }
 }

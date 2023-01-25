@@ -1,39 +1,29 @@
-package com.harisspahija.cobaltwindsbackend.model;
+package com.harisspahija.cobaltwindsbackend.dto;
 
 import com.harisspahija.cobaltwindsbackend.Role;
-import jakarta.persistence.*;
-import org.hibernate.annotations.GenericGenerator;
-
 import java.time.LocalDate;
 
-@Entity
-@Table(name = "Players")
-public class Player {
-    @Id
-    @GenericGenerator(name = "uuid", strategy = "uuid2")
-    @GeneratedValue(generator = "uuid")
-    @SuppressWarnings("unused")
+public class PlayerDto {
     private String id;
-
-    @Column(name = "name")
     private String name;
 
-    @Column(name = "date_of_birth")
     private LocalDate dateOfBirth;
 
-    @Column(name = "primary_role")
     private Role primaryRole;
-
-    @Column(name = "secondary_role")
     private Role secondaryRole;
 
-    @Column(name = "opgg_link")
     private String opggLink;
 
-    @Column(name = "free_agent")
     private boolean freeAgent;
 
-    public String getId() { return id; }
+    public String getId() {
+        return id;
+    }
+
+    public void setId(String id) {
+        this.id = id;
+    }
+
     public String getName() {
         return name;
     }
@@ -74,11 +64,22 @@ public class Player {
         this.opggLink = opggLink;
     }
 
-    public Boolean isFreeAgent() {
+    public boolean isFreeAgent() {
         return freeAgent;
     }
 
-    public void setFreeAgent(Boolean freeAgent) {
+    public void setFreeAgent(boolean freeAgent) {
         this.freeAgent = freeAgent;
+    }
+
+    public Boolean hasFillAndSecondaryRole() {
+        return this.primaryRole == Role.Fill && this.secondaryRole != null;
+    }
+    public Boolean hasDuplicateRole() {
+        return this.primaryRole == this.secondaryRole;
+    }
+
+    public Boolean hasInvalidRoles() {
+        return this.hasFillAndSecondaryRole() || this.hasDuplicateRole();
     }
 }
