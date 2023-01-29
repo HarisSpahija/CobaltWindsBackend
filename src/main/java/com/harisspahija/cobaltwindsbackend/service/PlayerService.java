@@ -30,11 +30,11 @@ public class PlayerService {
     }
 
     private List<PlayerDto> getPlayerDtos(List<Player> playerList) {
-        if (playerList.isEmpty()) {
-            throw new RepositoryNoRecordException();
-        }
-
         List<PlayerDto> playerDtoList = new ArrayList<>();
+
+        if (playerList.isEmpty()) {
+            return playerDtoList;
+        }
 
         for(Player player : playerList) {
             PlayerDto dto = transferToDto(player);
