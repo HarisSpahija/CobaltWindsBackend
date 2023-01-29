@@ -1,9 +1,22 @@
 package com.harisspahija.cobaltwindsbackend.exception;
 
 import com.harisspahija.cobaltwindsbackend.Role;
+import com.harisspahija.cobaltwindsbackend.advice.CustomExceptionInterface;
 
-public class PlayerHasPrimaryRoleAndSecondaryRoleIsNullException extends Exception {
+import java.util.HashMap;
+import java.util.Map;
+
+public class PlayerHasPrimaryRoleAndSecondaryRoleIsNullException extends RuntimeException implements CustomExceptionInterface {
+    private final Role primary;
+
     public PlayerHasPrimaryRoleAndSecondaryRoleIsNullException(Role primary) {
-        super("Player cannot have primary role ("  + primary + ") and no secondary, secondary must be given");
+        super();
+        this.primary = primary;
+    }
+
+    public Map<String, String> getErrors() {
+        HashMap<String, String> errors = new HashMap<>();
+        errors.put("secondaryRole", "cannot be null if primary role is set to " + primary);
+        return errors;
     }
 }

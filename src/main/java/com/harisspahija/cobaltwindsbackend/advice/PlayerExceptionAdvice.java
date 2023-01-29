@@ -10,6 +10,8 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.ResponseStatus;
 
+import java.util.Map;
+
 @ControllerAdvice
 public class PlayerExceptionAdvice {
 
@@ -23,21 +25,21 @@ public class PlayerExceptionAdvice {
     @ResponseBody
     @ExceptionHandler(PlayerHasDuplicateRoleException.class)
     @ResponseStatus(HttpStatus.BAD_REQUEST)
-    String playerHasDuplicateRoleHandler(PlayerHasDuplicateRoleException ex) {
-        return ex.getMessage();
+    Map<String, String> playerHasDuplicateRoleHandler(PlayerHasDuplicateRoleException ex) {
+        return ex.getErrors();
     }
 
     @ResponseBody
     @ExceptionHandler(PlayerHasPrimaryRoleFillAndSecondaryRoleNotNullException.class)
     @ResponseStatus(HttpStatus.BAD_REQUEST)
-    String playerHasPrimaryRoleFillAndSecondaryRoleNotNullHandler(PlayerHasPrimaryRoleFillAndSecondaryRoleNotNullException ex) {
-        return ex.getMessage();
+    Map<String, String> playerHasPrimaryRoleFillAndSecondaryRoleNotNullHandler(PlayerHasPrimaryRoleFillAndSecondaryRoleNotNullException ex) {
+        return ex.getErrors();
     }
 
     @ResponseBody
     @ExceptionHandler(PlayerHasPrimaryRoleAndSecondaryRoleIsNullException.class)
     @ResponseStatus(HttpStatus.BAD_REQUEST)
-    String playerHasPrimaryRoleAndSecondaryRoleIsNullException(PlayerHasPrimaryRoleAndSecondaryRoleIsNullException ex) {
-        return ex.getMessage();
+    Map<String, String> playerHasPrimaryRoleAndSecondaryRoleIsNullException(PlayerHasPrimaryRoleAndSecondaryRoleIsNullException ex) {
+      return ex.getErrors();
     }
 }

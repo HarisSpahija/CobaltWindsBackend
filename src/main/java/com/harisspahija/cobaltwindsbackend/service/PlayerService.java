@@ -2,14 +2,11 @@ package com.harisspahija.cobaltwindsbackend.service;
 
 import com.harisspahija.cobaltwindsbackend.dto.PlayerDto;
 import com.harisspahija.cobaltwindsbackend.dto.PlayerInputDto;
-import com.harisspahija.cobaltwindsbackend.exception.PlayerHasDuplicateRoleException;
-import com.harisspahija.cobaltwindsbackend.exception.PlayerHasPrimaryRoleFillAndSecondaryRoleNotNullException;
-import com.harisspahija.cobaltwindsbackend.exception.RepositoryNoRecordException;
+import com.harisspahija.cobaltwindsbackend.exception.*;
 import com.harisspahija.cobaltwindsbackend.model.Player;
 import com.harisspahija.cobaltwindsbackend.repository.PlayerRepository;
 
 import org.springframework.stereotype.Service;
-
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -64,6 +61,9 @@ public class PlayerService {
 
             if (dto.hasFillAndSecondaryRole())
                 throw new PlayerHasPrimaryRoleFillAndSecondaryRoleNotNullException();
+
+            if (dto.hasPrimaryAndNoSecondaryRole())
+                throw new PlayerHasPrimaryRoleAndSecondaryRoleIsNullException(dto.getPrimaryRole());
         }
 
         Player player = transferToPlayer(dto);
