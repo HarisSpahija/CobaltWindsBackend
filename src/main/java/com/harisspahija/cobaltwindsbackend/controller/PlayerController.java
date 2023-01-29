@@ -2,10 +2,12 @@ package com.harisspahija.cobaltwindsbackend.controller;
 
 import com.harisspahija.cobaltwindsbackend.dto.PlayerDto;
 import com.harisspahija.cobaltwindsbackend.dto.PlayerInputDto;
+import com.harisspahija.cobaltwindsbackend.exception.BadRequestException;
 import com.harisspahija.cobaltwindsbackend.service.PlayerService;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
@@ -43,7 +45,11 @@ public class PlayerController {
     }
 
     @PostMapping("")
-    public ResponseEntity<Object> createPlayer(@Valid @RequestBody PlayerInputDto playerInputDto) {
+    public ResponseEntity<Object> createPlayer(@Valid @RequestBody PlayerInputDto playerInputDto, BindingResult bindingResult) {
+        if (bindingResult.hasErrors()) {
+            throw new BadRequestException(bindingResult);
+        }
+
         PlayerDto dto = playerService.createPlayer(playerInputDto);
 
         URI location = ServletUriComponentsBuilder.fromCurrentRequest()
