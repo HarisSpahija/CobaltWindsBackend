@@ -3,6 +3,8 @@ package com.harisspahija.cobaltwindsbackend.model;
 import com.harisspahija.cobaltwindsbackend.Role;
 import jakarta.persistence.*;
 import org.hibernate.annotations.GenericGenerator;
+import org.hibernate.annotations.OnDelete;
+import org.hibernate.annotations.OnDeleteAction;
 
 import java.time.LocalDate;
 
@@ -32,6 +34,11 @@ public class Player {
 
     @Column(name = "free_agent")
     private boolean freeAgent;
+
+    @ManyToOne(fetch = FetchType.LAZY, optional = true)
+    @JoinColumn(name = "team_id", nullable = true)
+    @OnDelete(action = OnDeleteAction.CASCADE)
+    private Team team;
 
     public String getId() { return id; }
     public String getName() {
