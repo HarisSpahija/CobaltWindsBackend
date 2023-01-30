@@ -13,7 +13,7 @@ public class AuthRole {
     @Id
     private String authRoleName;
 
-    @ManyToMany(mappedBy = "AuthRoles")
+    @ManyToMany(mappedBy = "authRoles")
     private Collection<User> users;
 
     public String getAuthRoleName() {
