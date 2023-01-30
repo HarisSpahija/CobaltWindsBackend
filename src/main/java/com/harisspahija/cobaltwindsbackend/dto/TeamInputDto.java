@@ -4,6 +4,7 @@ import com.harisspahija.cobaltwindsbackend.Role;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Size;
 import org.hibernate.validator.constraints.Length;
+import org.hibernate.validator.constraints.UniqueElements;
 
 import java.util.List;
 
@@ -26,14 +27,7 @@ public class TeamInputDto {
     @Length(max = 250)
     private String biography;
 
-//    @NotEmpty
-//    private Player teamCaptain;
-
-    // Team can only recruit for 5 unique roles
-    // Top, Jungle, Mid, ADC, Support
-    // Fill is not considered a role but is a wildcard role
-
-    @Size(max=5)
+    @UniqueElements
     private List<Role> openRoles;
 
     public String getId() {
