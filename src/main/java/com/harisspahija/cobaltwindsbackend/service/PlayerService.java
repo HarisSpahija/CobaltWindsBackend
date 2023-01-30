@@ -67,6 +67,7 @@ public class PlayerService {
                 throw new PlayerHasPrimaryRoleAndSecondaryRoleIsNullException(dto.getPrimaryRole());
         }
 
+        // TODO: #11 Handle duplicate check
         Optional<Player> playerWithMatchingOpgg = playerRepository.findPlayerByOpggLink(dto.getOpggLink());
         if (playerWithMatchingOpgg.isPresent()) {
             throw new DataIntegrityViolationException("player with opggLink already exists");
@@ -87,6 +88,7 @@ public class PlayerService {
                 throw new PlayerHasPrimaryRoleFillAndSecondaryRoleNotNullException();
         }
 
+        // TODO: #11 Handle duplicate check
         Optional<Player> playerWithMatchingOpgg = playerRepository.findPlayerByOpggLink(dto.getOpggLink());
         if (playerWithMatchingOpgg.isPresent()) {
             throw new DataIntegrityViolationException("player with opggLink already exists");
