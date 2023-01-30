@@ -68,7 +68,7 @@ public class UserService {
     }
 
     public UserDto getUserByUsername(String username) {
-        User user = userRepository.findById(username).orElseThrow(() -> new RepositoryNoRecordException(username));
+        User user = userRepository.findUserByEmail(username).orElseThrow(() -> new RepositoryNoRecordException(username));
         return transferToDto(user);
     }
 }
