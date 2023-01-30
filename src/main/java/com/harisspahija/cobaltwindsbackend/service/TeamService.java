@@ -1,6 +1,7 @@
 package com.harisspahija.cobaltwindsbackend.service;
 
 import com.harisspahija.cobaltwindsbackend.Role;
+import com.harisspahija.cobaltwindsbackend.dto.PlayerDto;
 import com.harisspahija.cobaltwindsbackend.dto.TeamDto;
 import com.harisspahija.cobaltwindsbackend.dto.TeamInputDto;
 import com.harisspahija.cobaltwindsbackend.exception.BadRequestCustomException;
@@ -44,6 +45,16 @@ public class TeamService {
         }
 
         return teamDtoList;
+    }
+
+    public TeamDto getTeamById(String id) {
+        Optional<Team> teamOptional = teamRepository.findById(id);
+        if (teamOptional.isEmpty()) {
+            throw new RepositoryNoRecordException(id);
+        }
+
+        Team team = teamOptional.get();
+        return transferToDto(team);
     }
 
     public TeamDto createTeam(TeamInputDto dto, String captainId) {

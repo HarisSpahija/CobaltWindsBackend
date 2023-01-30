@@ -30,6 +30,12 @@ public class TeamController {
         return ResponseEntity.ok().body(dtos);
     }
 
+    @GetMapping("{id}")
+    public ResponseEntity<TeamDto> getTeam(@PathVariable("id")String id) {
+        TeamDto team = teamService.getTeamById(id);
+        return ResponseEntity.ok().body(team);
+    }
+
     @PostMapping("")
     public ResponseEntity<Object> createTeam(@RequestParam(value = "captainId") String captainId, @Valid @RequestBody TeamInputDto teamInputDto, BindingResult bindingResult) {
         if (captainId.isBlank() || captainId.isEmpty()) {
