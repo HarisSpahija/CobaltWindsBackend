@@ -1,5 +1,6 @@
 package com.harisspahija.cobaltwindsbackend.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
 import jakarta.persistence.ManyToMany;
@@ -24,6 +25,7 @@ public class AuthRole {
         this.authRoleName = authRoleName;
     }
 
+    @JsonIgnore
     public Collection<User> getUsers() {
         return users;
     }

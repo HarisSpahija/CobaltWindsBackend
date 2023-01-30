@@ -1,5 +1,6 @@
 package com.harisspahija.cobaltwindsbackend.dto;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.harisspahija.cobaltwindsbackend.model.AuthRole;
 import com.harisspahija.cobaltwindsbackend.model.Player;
 
@@ -8,7 +9,10 @@ import java.util.Collection;
 public class UserDto {
     private String id;
     private String email;
+    @JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
     private Collection<AuthRole> authRoles;
+
+    @JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
     private Player playerProfile;
 
     public String getId() {

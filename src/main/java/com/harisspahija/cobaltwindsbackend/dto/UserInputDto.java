@@ -2,20 +2,27 @@ package com.harisspahija.cobaltwindsbackend.dto;
 
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
-import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
 
 public class UserInputDto {
 
-    @NotNull
     @NotBlank
     @Size(min = 6)
     private String password;
 
-    @NotNull
     @NotBlank
     @Email
     private String email;
+
+    public String[] roles;
+
+    public String[] getRoles() {
+        return roles;
+    }
+
+    public void setRoles(String[] roles) {
+        this.roles = roles;
+    }
 
     public String getPassword() {
         return password;
