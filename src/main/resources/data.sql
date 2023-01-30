@@ -1,0 +1,1 @@
+insert into auth_roles(auth_role_name) values ('USER'), ('ADMIN'), ('TEAM_CAPTAIN'), ('PLAYER');
