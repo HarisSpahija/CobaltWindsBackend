@@ -54,4 +54,17 @@ public class TeamController {
 
         return ResponseEntity.created(location).body(dto);
     }
+
+    @PutMapping("{id}")
+    public ResponseEntity<Object> updateTeam(@PathVariable("id") String id, @Valid @RequestBody TeamInputDto teamInputDto) {
+        // TODO: Add authentication that only team owner can adjust team
+        TeamDto dto = teamService.updateTeam(id, teamInputDto);
+        return ResponseEntity.ok().body(dto);
+    }
+
+    @DeleteMapping("{id}")
+    public ResponseEntity<Object> disbandTeam(@PathVariable("id") String id) {
+        teamService.disbandTeam(id);
+        return ResponseEntity.noContent().build();
+    }
 }
