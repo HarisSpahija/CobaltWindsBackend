@@ -1,6 +1,7 @@
 package com.harisspahija.cobaltwindsbackend.advice;
 
-import com.harisspahija.cobaltwindsbackend.exception.BadRequestException;
+import com.harisspahija.cobaltwindsbackend.exception.BadRequestBindingException;
+import com.harisspahija.cobaltwindsbackend.exception.BadRequestCustomException;
 import com.harisspahija.cobaltwindsbackend.exception.RepositoryException;
 import com.harisspahija.cobaltwindsbackend.exception.RepositoryNoRecordException;
 import org.springframework.http.HttpStatus;
@@ -28,7 +29,12 @@ public class GlobalExceptionAdvice {
     }
 
     @ResponseBody
-    @ExceptionHandler(BadRequestException.class)
+    @ExceptionHandler(BadRequestCustomException.class)
     @ResponseStatus(HttpStatus.BAD_REQUEST)
-    Map<String, String> badRequestExceptionHandler(BadRequestException ex) { return ex.getErrors(); }
+    String badRequestCustomException (BadRequestCustomException ex) { return ex.getMessage(); }
+
+    @ResponseBody
+    @ExceptionHandler(BadRequestBindingException.class)
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    Map<String, String> badRequestExceptionHandler(BadRequestBindingException ex) { return ex.getErrors(); }
 }

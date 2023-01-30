@@ -1,5 +1,8 @@
 package com.harisspahija.cobaltwindsbackend.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import com.harisspahija.cobaltwindsbackend.Role;
 import jakarta.persistence.*;
 import org.hibernate.annotations.GenericGenerator;
@@ -42,6 +45,7 @@ public class Team {
     @OneToOne(fetch = FetchType.LAZY)
     @MapsId()
     @JoinColumn(name = "player_id")
+    @JsonManagedReference
     private Player teamCaptain;
 
     @Column(name = "open_roles")

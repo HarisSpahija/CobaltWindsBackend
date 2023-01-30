@@ -1,5 +1,8 @@
 package com.harisspahija.cobaltwindsbackend.model;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.harisspahija.cobaltwindsbackend.Role;
 import jakarta.persistence.*;
 import org.hibernate.annotations.GenericGenerator;
@@ -29,7 +32,7 @@ public class Player {
     @Column(name = "secondary_role")
     private Role secondaryRole;
 
-    @Column(name = "opgg_link")
+    @Column(name = "opgg_link", unique = true)
     private String opggLink;
 
     @Column(name = "free_agent")
@@ -38,6 +41,7 @@ public class Player {
     @ManyToOne(fetch = FetchType.LAZY, optional = true)
     @JoinColumn(name = "team_id", nullable = true)
     @OnDelete(action = OnDeleteAction.CASCADE)
+    @JsonBackReference
     private Team team;
 
     public String getId() { return id; }
@@ -87,5 +91,13 @@ public class Player {
 
     public void setFreeAgent(Boolean freeAgent) {
         this.freeAgent = freeAgent;
+    }
+
+    public Team getTeam() {
+        return team;
+    }
+
+    public void setTeam(Team team) {
+        this.team = team;
     }
 }

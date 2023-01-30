@@ -6,10 +6,10 @@ import org.springframework.validation.BindingResult;
 
 import java.util.Map;
 
-public class BadRequestException extends RuntimeException implements CustomExceptionInterface {
+public class BadRequestBindingException extends RuntimeException implements CustomExceptionInterface {
     private final BindingResult bindingResult;
 
-    public BadRequestException(BindingResult bindingResult) {
+    public BadRequestBindingException(BindingResult bindingResult) {
         super();
         this.bindingResult = bindingResult;
     }

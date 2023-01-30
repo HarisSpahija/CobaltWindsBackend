@@ -2,7 +2,7 @@ package com.harisspahija.cobaltwindsbackend.controller;
 
 import com.harisspahija.cobaltwindsbackend.dto.PlayerDto;
 import com.harisspahija.cobaltwindsbackend.dto.PlayerInputDto;
-import com.harisspahija.cobaltwindsbackend.exception.BadRequestException;
+import com.harisspahija.cobaltwindsbackend.exception.BadRequestBindingException;
 import com.harisspahija.cobaltwindsbackend.service.PlayerService;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -47,7 +47,7 @@ public class PlayerController {
     @PostMapping("")
     public ResponseEntity<Object> createPlayer(@Valid @RequestBody PlayerInputDto playerInputDto, BindingResult bindingResult) {
         if (bindingResult.hasErrors()) {
-            throw new BadRequestException(bindingResult);
+            throw new BadRequestBindingException(bindingResult);
         }
 
         PlayerDto dto = playerService.createPlayer(playerInputDto);

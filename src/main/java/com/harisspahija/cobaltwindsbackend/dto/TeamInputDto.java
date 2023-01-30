@@ -1,14 +1,10 @@
 package com.harisspahija.cobaltwindsbackend.dto;
 
 import com.harisspahija.cobaltwindsbackend.Role;
-import com.harisspahija.cobaltwindsbackend.model.Player;
 import jakarta.validation.constraints.NotBlank;
-import jakarta.validation.constraints.NotEmpty;
-import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
 import org.hibernate.validator.constraints.Length;
 
-import java.time.LocalDate;
 import java.util.List;
 
 public class TeamInputDto {
@@ -30,8 +26,8 @@ public class TeamInputDto {
     @Length(max = 250)
     private String biography;
 
-    @NotEmpty
-    private Player teamCaptain;
+//    @NotEmpty
+//    private Player teamCaptain;
 
     // Team can only recruit for 5 unique roles
     // Top, Jungle, Mid, ADC, Support
@@ -39,6 +35,7 @@ public class TeamInputDto {
 
     @Size(max=5)
     private List<Role> openRoles;
+
     public String getId() {
         return id;
     }
@@ -87,13 +84,13 @@ public class TeamInputDto {
         this.biography = biography;
     }
 
-    public Player getTeamCaptain() {
-        return teamCaptain;
-    }
-
-    public void setTeamCaptain(Player teamCaptain) {
-        this.teamCaptain = teamCaptain;
-    }
+//    public Player getTeamCaptain() {
+//        return teamCaptain;
+//    }
+//
+//    public void setTeamCaptain(Player teamCaptain) {
+//        this.teamCaptain = teamCaptain;
+//    }
 
     public List<Role> getOpenRoles() {
         return openRoles;

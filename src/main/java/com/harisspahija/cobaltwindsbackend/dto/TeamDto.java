@@ -1,11 +1,14 @@
 package com.harisspahija.cobaltwindsbackend.dto;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.harisspahija.cobaltwindsbackend.Role;
 import com.harisspahija.cobaltwindsbackend.model.Player;
 
 import java.time.LocalDate;
 import java.util.List;
 
+@JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
 public class TeamDto {
     private String id;
     private String name;

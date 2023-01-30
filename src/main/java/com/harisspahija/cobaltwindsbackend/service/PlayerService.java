@@ -83,15 +83,16 @@ public class PlayerService {
 
         Optional<Player> playerOptional = playerRepository.findById(id);
         if (playerOptional.isPresent()) {
-            Player player1 = playerOptional.get();
+            Player player = playerOptional.get();
 
-            player1.setName(dto.getName());
-            player1.setDateOfBirth(dto.getDateOfBirth());
-            player1.setFreeAgent(dto.isFreeAgent());
-            player1.setOpggLink(dto.getOpggLink());
-            player1.setPrimaryRole(dto.getPrimaryRole());
-            player1.setSecondaryRole(dto.getSecondaryRole());
-            Player returnPlayer = playerRepository.save(player1);
+            player.setName(dto.getName());
+            player.setDateOfBirth(dto.getDateOfBirth());
+            player.setFreeAgent(dto.isFreeAgent());
+            player.setOpggLink(dto.getOpggLink());
+            player.setPrimaryRole(dto.getPrimaryRole());
+            player.setSecondaryRole(dto.getSecondaryRole());
+
+            Player returnPlayer = playerRepository.save(player);
 
             return transferToDto(returnPlayer);
         } else {
