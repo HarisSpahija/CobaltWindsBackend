@@ -1,9 +1,6 @@
 package com.harisspahija.cobaltwindsbackend.advice;
 
-import com.harisspahija.cobaltwindsbackend.exception.BadRequestBindingException;
-import com.harisspahija.cobaltwindsbackend.exception.BadRequestCustomException;
-import com.harisspahija.cobaltwindsbackend.exception.RepositoryException;
-import com.harisspahija.cobaltwindsbackend.exception.RepositoryNoRecordException;
+import com.harisspahija.cobaltwindsbackend.exception.*;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.ControllerAdvice;
@@ -43,6 +40,13 @@ public class GlobalExceptionAdvice {
     @ExceptionHandler(DataIntegrityViolationException.class)
     @ResponseStatus(HttpStatus.CONFLICT)
     String dataIntegrityViolationExceptionHandler(DataIntegrityViolationException ex) {
+        return ex.getMessage();
+    }
+
+    @ResponseBody
+    @ExceptionHandler(ForbiddenActionException.class)
+    @ResponseStatus(HttpStatus.FORBIDDEN)
+    String forbiddenActionExceptionHandler(ForbiddenActionException ex) {
         return ex.getMessage();
     }
 }

@@ -2,6 +2,7 @@ package com.harisspahija.cobaltwindsbackend.controller;
 
 import com.harisspahija.cobaltwindsbackend.dto.TeamDto;
 import com.harisspahija.cobaltwindsbackend.dto.TeamInputDto;
+import com.harisspahija.cobaltwindsbackend.dto.TeamJoinInputDto;
 import com.harisspahija.cobaltwindsbackend.exception.BadRequestBindingException;
 import com.harisspahija.cobaltwindsbackend.exception.BadRequestCustomException;
 import com.harisspahija.cobaltwindsbackend.service.TeamService;
@@ -66,5 +67,15 @@ public class TeamController {
     public ResponseEntity<Object> disbandTeam(@PathVariable("id") String id) {
         teamService.disbandTeam(id);
         return ResponseEntity.noContent().build();
+    }
+
+    @PostMapping("{id}/join")
+    public ResponseEntity<Object> joinTeam(@PathVariable("id") String teamId, @Valid @RequestBody TeamJoinInputDto teamJoinInputDto, BindingResult bindingResult) {
+        if (bindingResult.hasErrors()) {
+            throw new BadRequestBindingException(bindingResult);
+        }
+
+        TeamDto dto = teamService.joinTeam(teamId, teamJoinInputDto.getPlayerId(), teamJoinInputDto.getPassword());
+        return ResponseEntity.ok().body(dto);
     }
 }

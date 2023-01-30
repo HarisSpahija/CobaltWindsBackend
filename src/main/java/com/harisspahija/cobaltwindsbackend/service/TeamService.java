@@ -1,9 +1,8 @@
 package com.harisspahija.cobaltwindsbackend.service;
 
-import com.harisspahija.cobaltwindsbackend.Role;
 import com.harisspahija.cobaltwindsbackend.dto.TeamDto;
 import com.harisspahija.cobaltwindsbackend.dto.TeamInputDto;
-import com.harisspahija.cobaltwindsbackend.exception.BadRequestCustomException;
+import com.harisspahija.cobaltwindsbackend.exception.ForbiddenActionException;
 import com.harisspahija.cobaltwindsbackend.exception.RepositoryNoRecordException;
 import com.harisspahija.cobaltwindsbackend.model.Player;
 import com.harisspahija.cobaltwindsbackend.model.Team;
@@ -63,17 +62,17 @@ public class TeamService {
               throw new RepositoryNoRecordException(captainId);
           }
           if (teamCaptain.get().getTeam() != null) {
-              throw new BadRequestCustomException("You are already in a team");
+              throw new DataIntegrityViolationException("You are already in a team");
           }
 
           handleDuplicate(dto);
 
           Team team = transferToTeam(dto);
 
-          List<Player> players = new ArrayList<Player>();
+          List<Player> players = new ArrayList<>();
           players.add(teamCaptain.get());
 
-          team.setPassword("0000");
+          team.setPassword("00000");
           team.setTeamCaptain(teamCaptain.get());
           team.setCreationDate(LocalDate.now());
           team.setPlayers(players);
@@ -131,8 +130,8 @@ public class TeamService {
         dto.setCreationDate(team.getCreationDate());
         dto.setDisbandDate(team.getDisbandDate());
         dto.setTeamCaptain(team.getTeamCaptain());
-        dto.setPlayers(team.getPlayers() == null ? new ArrayList<Player>() : team.getPlayers());
-        dto.setOpenRoles(team.getOpenRoles() == null ? new ArrayList<Role>() : team.getOpenRoles());
+        dto.setPlayers(team.getPlayers() == null ? new ArrayList<>() : team.getPlayers());
+        dto.setOpenRoles(team.getOpenRoles() == null ? new ArrayList<>() : team.getOpenRoles());
 
         return dto;
     }
@@ -149,6 +148,29 @@ public class TeamService {
         return team;
     }
 
+    public TeamDto joinTeam(String teamId, String playerId, String password) {
+        Team team = teamRepository.findById(teamId).orElseThrow(() -> new RepositoryNoRecordException(teamId));
+
+        if (team.getPlayers().size() >= 7) {
+            throw new DataIntegrityViolationException("Max player count reached");
+        }
+        if (!password.equals(team.getPassword())) {
+            throw new ForbiddenActionException("Wrong password");
+        }
+
+        Player player = playerRepository.findById(playerId).orElseThrow(() -> new RepositoryNoRecordException(playerId));
+
+        if (player.getTeam() != null) {
+            throw new DataIntegrityViolationException("You are already in a team");
+        }
+        List<Player> players = team.getPlayers();
+        players.add(player);
+
+        team.setPlayers(players);
+        teamRepository.save(team);
+
+        return transferToDto(team);
+    }
 
     public void disbandTeam(String id) {
         Optional<Team> team = teamRepository.findById(id);
@@ -165,7 +187,7 @@ public class TeamService {
 
         playerRepository.saveAll(players);
 
-        // TODO: Find team in matches
+        // TODO: #12 - Find team in matches
         if (false) {
             teamRepository.deleteById(id);
         } else {
