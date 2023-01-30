@@ -1,6 +1,8 @@
 package com.harisspahija.cobaltwindsbackend.dto;
 
 import com.harisspahija.cobaltwindsbackend.Role;
+import com.harisspahija.cobaltwindsbackend.model.Team;
+
 import java.time.LocalDate;
 
 public class PlayerDto {
@@ -16,6 +18,10 @@ public class PlayerDto {
 
     private boolean freeAgent;
 
+
+
+    private Team team;
+
     public String getId() {
         return id;
     }
@@ -30,6 +36,14 @@ public class PlayerDto {
 
     public void setName(String name) {
         this.name = name;
+    }
+
+    public Team getTeam() {
+        return team;
+    }
+
+    public void setTeam(Team team) {
+        this.team = team;
     }
 
     public LocalDate getDateOfBirth() {

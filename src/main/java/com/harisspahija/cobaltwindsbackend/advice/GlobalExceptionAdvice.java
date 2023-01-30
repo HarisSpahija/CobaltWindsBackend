@@ -1,8 +1,7 @@
 package com.harisspahija.cobaltwindsbackend.advice;
 
-import com.harisspahija.cobaltwindsbackend.exception.BadRequestException;
-import com.harisspahija.cobaltwindsbackend.exception.RepositoryException;
-import com.harisspahija.cobaltwindsbackend.exception.RepositoryNoRecordException;
+import com.harisspahija.cobaltwindsbackend.exception.*;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
@@ -28,7 +27,26 @@ public class GlobalExceptionAdvice {
     }
 
     @ResponseBody
-    @ExceptionHandler(BadRequestException.class)
+    @ExceptionHandler(BadRequestCustomException.class)
     @ResponseStatus(HttpStatus.BAD_REQUEST)
-    Map<String, String> badRequestExceptionHandler(BadRequestException ex) { return ex.getErrors(); }
+    String badRequestCustomException (BadRequestCustomException ex) { return ex.getMessage(); }
+
+    @ResponseBody
+    @ExceptionHandler(BadRequestBindingException.class)
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    Map<String, String> badRequestExceptionHandler(BadRequestBindingException ex) { return ex.getErrors(); }
+
+    @ResponseBody
+    @ExceptionHandler(DataIntegrityViolationException.class)
+    @ResponseStatus(HttpStatus.CONFLICT)
+    String dataIntegrityViolationExceptionHandler(DataIntegrityViolationException ex) {
+        return ex.getMessage();
+    }
+
+    @ResponseBody
+    @ExceptionHandler(ForbiddenActionException.class)
+    @ResponseStatus(HttpStatus.FORBIDDEN)
+    String forbiddenActionExceptionHandler(ForbiddenActionException ex) {
+        return ex.getMessage();
+    }
 }

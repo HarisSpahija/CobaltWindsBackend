@@ -1,5 +1,6 @@
 package com.harisspahija.cobaltwindsbackend.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.harisspahija.cobaltwindsbackend.Role;
 import jakarta.persistence.*;
 import org.hibernate.annotations.GenericGenerator;
@@ -27,11 +28,15 @@ public class Player {
     @Column(name = "secondary_role")
     private Role secondaryRole;
 
-    @Column(name = "opgg_link")
+    @Column(name = "opgg_link", unique = true)
     private String opggLink;
 
     @Column(name = "free_agent")
     private boolean freeAgent;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "team_id")
+    private Team team;
 
     public String getId() { return id; }
     public String getName() {
@@ -80,5 +85,14 @@ public class Player {
 
     public void setFreeAgent(Boolean freeAgent) {
         this.freeAgent = freeAgent;
+    }
+
+    @JsonIgnore
+    public Team getTeam() {
+        return team;
+    }
+
+    public void setTeam(Team team) {
+        this.team = team;
     }
 }
