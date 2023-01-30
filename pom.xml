@@ -57,6 +57,11 @@
             <artifactId>json-gson</artifactId>
             <version>1.8.3</version>
         </dependency>
+        <dependency>
+            <groupId>io.jsonwebtoken</groupId>
+            <artifactId>jjwt-root</artifactId>
+            <version>0.11.5</version>
+        </dependency>
     </dependencies>
 
     <build>
