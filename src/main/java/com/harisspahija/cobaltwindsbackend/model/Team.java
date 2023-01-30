@@ -1,8 +1,5 @@
 package com.harisspahija.cobaltwindsbackend.model;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-import com.fasterxml.jackson.annotation.JsonManagedReference;
 import com.harisspahija.cobaltwindsbackend.Role;
 import jakarta.persistence.*;
 import org.hibernate.annotations.GenericGenerator;
@@ -45,8 +42,10 @@ public class Team {
     @OneToOne(fetch = FetchType.LAZY)
     @MapsId()
     @JoinColumn(name = "player_id")
-    @JsonManagedReference
     private Player teamCaptain;
+
+    @OneToMany(mappedBy = "team", cascade = CascadeType.ALL)
+    private List<Player> players;
 
     @Column(name = "open_roles")
     private List<Role> openRoles;
@@ -117,6 +116,14 @@ public class Team {
 
     public void setTeamCaptain(Player teamCaptain) {
         this.teamCaptain = teamCaptain;
+    }
+
+    public List<Player> getPlayers() {
+        return players;
+    }
+
+    public void setPlayers(List<Player> players) {
+        this.players = players;
     }
 
     public List<Role> getOpenRoles() {

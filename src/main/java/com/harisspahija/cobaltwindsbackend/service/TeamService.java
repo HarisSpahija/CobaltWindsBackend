@@ -1,5 +1,6 @@
 package com.harisspahija.cobaltwindsbackend.service;
 
+import com.harisspahija.cobaltwindsbackend.Role;
 import com.harisspahija.cobaltwindsbackend.dto.TeamDto;
 import com.harisspahija.cobaltwindsbackend.dto.TeamInputDto;
 import com.harisspahija.cobaltwindsbackend.exception.BadRequestCustomException;
@@ -56,14 +57,19 @@ public class TeamService {
 
           Team team = transferToTeam(dto);
 
+          List<Player> players = new ArrayList<Player>();
+          players.add(teamCaptain.get());
+
           team.setPassword("0000");
           team.setTeamCaptain(teamCaptain.get());
           team.setCreationDate(LocalDate.now());
+          team.setPlayers(players);
 
           teamRepository.save(team);
 
           teamCaptain.get().setFreeAgent(false);
           teamCaptain.get().setTeam(team);
+
           playerRepository.save(teamCaptain.get());
 
           return transferToDto(team);
@@ -80,7 +86,8 @@ public class TeamService {
         dto.setCreationDate(team.getCreationDate());
         dto.setDisbandDate(team.getDisbandDate());
         dto.setTeamCaptain(team.getTeamCaptain());
-        dto.setOpenRoles(team.getOpenRoles());
+        dto.setPlayers(team.getPlayers() == null ? new ArrayList<Player>() : team.getPlayers());
+        dto.setOpenRoles(team.getOpenRoles() == null ? new ArrayList<Role>() : team.getOpenRoles());
 
         return dto;
     }

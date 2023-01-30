@@ -1,6 +1,5 @@
 package com.harisspahija.cobaltwindsbackend.dto;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.harisspahija.cobaltwindsbackend.Role;
 import com.harisspahija.cobaltwindsbackend.model.Player;
@@ -8,7 +7,6 @@ import com.harisspahija.cobaltwindsbackend.model.Player;
 import java.time.LocalDate;
 import java.util.List;
 
-@JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
 public class TeamDto {
     private String id;
     private String name;
@@ -17,9 +15,12 @@ public class TeamDto {
     private String biography;
     private LocalDate creationDate;
     private LocalDate disbandDate;
+
+    @JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
     private Player teamCaptain;
     private List<Role> openRoles;
 
+    @JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
     private List<Player> players;
 
     public List<Player> getPlayers() {

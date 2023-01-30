@@ -4,6 +4,7 @@ import com.harisspahija.cobaltwindsbackend.exception.BadRequestBindingException;
 import com.harisspahija.cobaltwindsbackend.exception.BadRequestCustomException;
 import com.harisspahija.cobaltwindsbackend.exception.RepositoryException;
 import com.harisspahija.cobaltwindsbackend.exception.RepositoryNoRecordException;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
@@ -37,4 +38,11 @@ public class GlobalExceptionAdvice {
     @ExceptionHandler(BadRequestBindingException.class)
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     Map<String, String> badRequestExceptionHandler(BadRequestBindingException ex) { return ex.getErrors(); }
+
+    @ResponseBody
+    @ExceptionHandler(DataIntegrityViolationException.class)
+    @ResponseStatus(HttpStatus.CONFLICT)
+    String dataIntegrityViolationExceptionHandler(DataIntegrityViolationException ex) {
+        return ex.getMessage();
+    }
 }

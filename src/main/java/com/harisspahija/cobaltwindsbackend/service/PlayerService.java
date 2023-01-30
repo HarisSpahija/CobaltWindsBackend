@@ -6,6 +6,7 @@ import com.harisspahija.cobaltwindsbackend.exception.*;
 import com.harisspahija.cobaltwindsbackend.model.Player;
 import com.harisspahija.cobaltwindsbackend.repository.PlayerRepository;
 
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Service;
 import java.util.ArrayList;
 import java.util.List;
@@ -46,12 +47,12 @@ public class PlayerService {
 
     public PlayerDto getPlayerById(String id) {
         Optional<Player> playerOptional = playerRepository.findById(id);
-        if (playerOptional.isPresent()) {
-            Player player = playerOptional.get();
-            return transferToDto(player);
-        } else {
+        if (playerOptional.isEmpty()) {
             throw new RepositoryNoRecordException(id);
         }
+
+        Player player = playerOptional.get();
+        return transferToDto(player);
     }
 
     public PlayerDto createPlayer(PlayerInputDto dto) {
@@ -66,10 +67,15 @@ public class PlayerService {
                 throw new PlayerHasPrimaryRoleAndSecondaryRoleIsNullException(dto.getPrimaryRole());
         }
 
+        Optional<Player> playerWithMatchingOpgg = playerRepository.findPlayerByOpggLink(dto.getOpggLink());
+        if (playerWithMatchingOpgg.isPresent()) {
+            throw new DataIntegrityViolationException("player with opggLink already exists");
+        }
+
         Player player = transferToPlayer(dto);
         playerRepository.save(player);
-
         return transferToDto(player);
+
     }
 
     public PlayerDto updatePlayer(String id, PlayerInputDto dto) {
@@ -81,23 +87,27 @@ public class PlayerService {
                 throw new PlayerHasPrimaryRoleFillAndSecondaryRoleNotNullException();
         }
 
+        Optional<Player> playerWithMatchingOpgg = playerRepository.findPlayerByOpggLink(dto.getOpggLink());
+        if (playerWithMatchingOpgg.isPresent()) {
+            throw new DataIntegrityViolationException("player with opggLink already exists");
+        }
+
         Optional<Player> playerOptional = playerRepository.findById(id);
-        if (playerOptional.isPresent()) {
-            Player player = playerOptional.get();
-
-            player.setName(dto.getName());
-            player.setDateOfBirth(dto.getDateOfBirth());
-            player.setFreeAgent(dto.isFreeAgent());
-            player.setOpggLink(dto.getOpggLink());
-            player.setPrimaryRole(dto.getPrimaryRole());
-            player.setSecondaryRole(dto.getSecondaryRole());
-
-            Player returnPlayer = playerRepository.save(player);
-
-            return transferToDto(returnPlayer);
-        } else {
+        if (playerOptional.isEmpty()) {
             throw new RepositoryNoRecordException(id);
         }
+
+        Player player = playerOptional.get();
+
+        player.setName(dto.getName());
+        player.setDateOfBirth(dto.getDateOfBirth());
+        player.setFreeAgent(dto.isFreeAgent());
+        player.setOpggLink(dto.getOpggLink());
+        player.setPrimaryRole(dto.getPrimaryRole());
+        player.setSecondaryRole(dto.getSecondaryRole());
+
+        playerRepository.save(player);
+        return transferToDto(player);
     }
 
     public Player transferToPlayer(PlayerInputDto dto) {

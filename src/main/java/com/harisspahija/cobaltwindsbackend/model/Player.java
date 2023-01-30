@@ -1,13 +1,9 @@
 package com.harisspahija.cobaltwindsbackend.model;
 
-import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.harisspahija.cobaltwindsbackend.Role;
 import jakarta.persistence.*;
 import org.hibernate.annotations.GenericGenerator;
-import org.hibernate.annotations.OnDelete;
-import org.hibernate.annotations.OnDeleteAction;
 
 import java.time.LocalDate;
 
@@ -38,10 +34,8 @@ public class Player {
     @Column(name = "free_agent")
     private boolean freeAgent;
 
-    @ManyToOne(fetch = FetchType.LAZY, optional = true)
-    @JoinColumn(name = "team_id", nullable = true)
-    @OnDelete(action = OnDeleteAction.CASCADE)
-    @JsonBackReference
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "team_id")
     private Team team;
 
     public String getId() { return id; }
@@ -93,6 +87,7 @@ public class Player {
         this.freeAgent = freeAgent;
     }
 
+    @JsonIgnore
     public Team getTeam() {
         return team;
     }
