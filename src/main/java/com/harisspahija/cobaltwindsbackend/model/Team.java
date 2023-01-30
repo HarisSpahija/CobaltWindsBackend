@@ -40,8 +40,6 @@ public class Team {
     private LocalDate disbandDate;
 
     @OneToOne(fetch = FetchType.LAZY)
-    @MapsId()
-    @JoinColumn(name = "player_id")
     private Player teamCaptain;
 
     @OneToMany(mappedBy = "team", cascade = CascadeType.ALL)
