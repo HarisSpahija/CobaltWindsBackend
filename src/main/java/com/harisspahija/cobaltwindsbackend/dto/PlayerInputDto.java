@@ -7,6 +7,8 @@ import java.time.LocalDate;
 
 public class PlayerInputDto {
     private String id;
+
+    @NotNull
     @NotBlank
     private String name;
 

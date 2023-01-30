@@ -32,7 +32,7 @@ public class TeamController {
     }
 
     @GetMapping("{id}")
-    public ResponseEntity<TeamDto> getTeam(@PathVariable("id")String id) {
+    public ResponseEntity<TeamDto> getTeam(@PathVariable("id") String id) {
         TeamDto team = teamService.getTeamById(id);
         return ResponseEntity.ok().body(team);
     }

@@ -2,6 +2,7 @@ package com.harisspahija.cobaltwindsbackend.dto;
 
 import com.harisspahija.cobaltwindsbackend.Role;
 import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
 import org.hibernate.validator.constraints.Length;
 import org.hibernate.validator.constraints.UniqueElements;
@@ -10,10 +11,13 @@ import java.util.List;
 
 public class TeamInputDto {
     private String id;
+
+    @NotNull
     @NotBlank
     @Size(min = 4, max = 16)
     private String name;
 
+    @NotNull
     @NotBlank
     @Length(min = 3, max = 4)
     private String tag;
@@ -77,14 +81,6 @@ public class TeamInputDto {
     public void setBiography(String biography) {
         this.biography = biography;
     }
-
-//    public Player getTeamCaptain() {
-//        return teamCaptain;
-//    }
-//
-//    public void setTeamCaptain(Player teamCaptain) {
-//        this.teamCaptain = teamCaptain;
-//    }
 
     public List<Role> getOpenRoles() {
         return openRoles;

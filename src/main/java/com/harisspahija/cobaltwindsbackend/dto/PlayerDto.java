@@ -18,8 +18,6 @@ public class PlayerDto {
 
     private boolean freeAgent;
 
-
-
     private Team team;
 
     public String getId() {
