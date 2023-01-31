@@ -62,28 +62,28 @@ insert into users_auth_roles (users_id, auth_roles_auth_role_name) VALUES ('free
 insert into users_auth_roles (users_id, auth_roles_auth_role_name) VALUES ('user-uuid', 'USER');
 
 -- Team REEF ESPORTS --
-insert into players (id, date_of_birth, free_agent, name, opgg_link, primary_role, secondary_role, team_id) VALUES ('captain-uuid-1', '2023-01-30', 'FALSE', 'RE Westman', 'https://www.op.gg/summoners/euw/RE%20Westman', 2, NULL, NULL);
-insert into players (id, date_of_birth, free_agent, name, opgg_link, primary_role, secondary_role, team_id) VALUES ('team_member-uuid-1', '2023-01-30', 'FALSE', 'RE Smette', 'https://www.op.gg/summoners/euw/RE%20Smette', 3, NULL, NULL);
-insert into players (id, date_of_birth, free_agent, name, opgg_link, primary_role, secondary_role, team_id) VALUES ('team_member-uuid-2', '2023-01-30', 'FALSE', 'Addi', 'https://www.op.gg/summoners/euw/Addi', 4, NULL, NULL);
-insert into players (id, date_of_birth, free_agent, name, opgg_link, primary_role, secondary_role, team_id) VALUES ('team_member-uuid-3', '2023-01-30', 'FALSE', 'Oceancroc', 'https://www.op.gg/summoners/eune/Oceancroc', 5, NULL, NULL);
-insert into players (id, date_of_birth, free_agent, name, opgg_link, primary_role, secondary_role, team_id) VALUES ('team_member-uuid-4', '2023-01-30', 'FALSE', 'RE Webbiieeee', 'https://www.op.gg/summoners/euw/RE%20Webbiieeee', 6, NULL, NULL);
+insert into players (id, date_of_birth, free_agent, name, opgg_link, primary_role, secondary_role, team_id) VALUES ('captain-uuid-1', '2023-01-30', 'FALSE', 'RE Westman', 'https://www.op.gg/summoners/euw/RE%20Westman', 1, NULL, NULL);
+insert into players (id, date_of_birth, free_agent, name, opgg_link, primary_role, secondary_role, team_id) VALUES ('team_member-uuid-1', '2023-01-30', 'FALSE', 'RE Smette', 'https://www.op.gg/summoners/euw/RE%20Smette', 2, NULL, NULL);
+insert into players (id, date_of_birth, free_agent, name, opgg_link, primary_role, secondary_role, team_id) VALUES ('team_member-uuid-2', '2023-01-30', 'FALSE', 'Addi', 'https://www.op.gg/summoners/euw/Addi', 3, NULL, NULL);
+insert into players (id, date_of_birth, free_agent, name, opgg_link, primary_role, secondary_role, team_id) VALUES ('team_member-uuid-3', '2023-01-30', 'FALSE', 'Oceancroc', 'https://www.op.gg/summoners/eune/Oceancroc', 4, NULL, NULL);
+insert into players (id, date_of_birth, free_agent, name, opgg_link, primary_role, secondary_role, team_id) VALUES ('team_member-uuid-4', '2023-01-30', 'FALSE', 'RE Webbiieeee', 'https://www.op.gg/summoners/euw/RE%20Webbiieeee', 5, NULL, NULL);
 
 -- Team SG Clarity --
-insert into players (id, date_of_birth, free_agent, name, opgg_link, primary_role, secondary_role, team_id) VALUES ('captain-uuid-2', '2023-01-30', 'FALSE', '2h tst pepega', 'https://www.op.gg/summoners/euw/2h%20tst%20pepega', 2, NULL, NULL);
-insert into players (id, date_of_birth, free_agent, name, opgg_link, primary_role, secondary_role, team_id) VALUES ('team_member-uuid-5', '2023-01-30', 'FALSE', 'Hattune', 'https://www.op.gg/summoners/euw/Hattune', 3, NULL, NULL);
-insert into players (id, date_of_birth, free_agent, name, opgg_link, primary_role, secondary_role, team_id) VALUES ('team_member-uuid-6', '2023-01-30', 'FALSE', 'Fozzmaniac', 'https://www.op.gg/summoners/euw/Fozzmaniac', 4, NULL, NULL);
-insert into players (id, date_of_birth, free_agent, name, opgg_link, primary_role, secondary_role, team_id) VALUES ('team_member-uuid-7', '2023-01-30', 'FALSE', 'Alvance Pro', 'https://www.op.gg/summoners/euw/Alvance%20Pro', 5, NULL, NULL);
-insert into players (id, date_of_birth, free_agent, name, opgg_link, primary_role, secondary_role, team_id) VALUES ('team_member-uuid-8', '2023-01-30', 'FALSE', 'Absolutely Halal', 'https://www.op.gg/summoners/euw/Absolutely%20Halal', 6, NULL, NULL);
+insert into players (id, date_of_birth, free_agent, name, opgg_link, primary_role, secondary_role, team_id) VALUES ('captain-uuid-2', '2023-01-30', 'FALSE', '2h tst pepega', 'https://www.op.gg/summoners/euw/2h%20tst%20pepega', 1, NULL, NULL);
+insert into players (id, date_of_birth, free_agent, name, opgg_link, primary_role, secondary_role, team_id) VALUES ('team_member-uuid-5', '2023-01-30', 'FALSE', 'Hattune', 'https://www.op.gg/summoners/euw/Hattune', 2, NULL, NULL);
+insert into players (id, date_of_birth, free_agent, name, opgg_link, primary_role, secondary_role, team_id) VALUES ('team_member-uuid-6', '2023-01-30', 'FALSE', 'Fozzmaniac', 'https://www.op.gg/summoners/euw/Fozzmaniac', 3, NULL, NULL);
+insert into players (id, date_of_birth, free_agent, name, opgg_link, primary_role, secondary_role, team_id) VALUES ('team_member-uuid-7', '2023-01-30', 'FALSE', 'Alvance Pro', 'https://www.op.gg/summoners/euw/Alvance%20Pro', 4, NULL, NULL);
+insert into players (id, date_of_birth, free_agent, name, opgg_link, primary_role, secondary_role, team_id) VALUES ('team_member-uuid-8', '2023-01-30', 'FALSE', 'Absolutely Halal', 'https://www.op.gg/summoners/euw/Absolutely%20Halal', 5, NULL, NULL);
 
 -- Team Abstract Chaos --
-insert into players (id, date_of_birth, free_agent, name, opgg_link, primary_role, secondary_role, team_id) VALUES ('captain-uuid-3', '2023-01-30', 'FALSE', 'Railthemail', 'https://www.op.gg/summoners/euw/Railthemail', 2, NULL, NULL);
-insert into players (id, date_of_birth, free_agent, name, opgg_link, primary_role, secondary_role, team_id) VALUES ('team_member-uuid-9', '2023-01-30', 'FALSE', 'shy tiny girl', 'https://www.op.gg/summoners/na/shy%20tiny%20girl', 3, NULL, NULL);
-insert into players (id, date_of_birth, free_agent, name, opgg_link, primary_role, secondary_role, team_id) VALUES ('team_member-uuid-10', '2023-01-30', 'FALSE', 'King Arsenic', 'https://www.op.gg/summoners/euw/King%20Arsenic', 4, NULL, NULL);
-insert into players (id, date_of_birth, free_agent, name, opgg_link, primary_role, secondary_role, team_id) VALUES ('team_member-uuid-11', '2023-01-30', 'FALSE', 'BloodBoy', 'https://www.op.gg/summoners/euw/BloodBoy', 5, NULL, NULL);
-insert into players (id, date_of_birth, free_agent, name, opgg_link, primary_role, secondary_role, team_id) VALUES ('team_member-uuid-12', '2023-01-30', 'FALSE', 'FIay', 'https://www.op.gg/summoners/euw/FIay', 6, NULL, NULL);
+insert into players (id, date_of_birth, free_agent, name, opgg_link, primary_role, secondary_role, team_id) VALUES ('captain-uuid-3', '2023-01-30', 'FALSE', 'Railthemail', 'https://www.op.gg/summoners/euw/Railthemail', 1, NULL, NULL);
+insert into players (id, date_of_birth, free_agent, name, opgg_link, primary_role, secondary_role, team_id) VALUES ('team_member-uuid-9', '2023-01-30', 'FALSE', 'shy tiny girl', 'https://www.op.gg/summoners/na/shy%20tiny%20girl', 2, NULL, NULL);
+insert into players (id, date_of_birth, free_agent, name, opgg_link, primary_role, secondary_role, team_id) VALUES ('team_member-uuid-10', '2023-01-30', 'FALSE', 'King Arsenic', 'https://www.op.gg/summoners/euw/King%20Arsenic', 3, NULL, NULL);
+insert into players (id, date_of_birth, free_agent, name, opgg_link, primary_role, secondary_role, team_id) VALUES ('team_member-uuid-11', '2023-01-30', 'FALSE', 'BloodBoy', 'https://www.op.gg/summoners/euw/BloodBoy', 4, NULL, NULL);
+insert into players (id, date_of_birth, free_agent, name, opgg_link, primary_role, secondary_role, team_id) VALUES ('team_member-uuid-12', '2023-01-30', 'FALSE', 'FIay', 'https://www.op.gg/summoners/euw/FIay', 5, NULL, NULL);
 
 -- FREE AGENTS --
-insert into players (id, date_of_birth, free_agent, name, opgg_link, primary_role, secondary_role, team_id) VALUES ('free_agent-uuid', '2023-01-30', 'TRUE', 'Beedle', 'https://www.op.gg/summoners/euw/Beedle', 2, 3, NULL);
+insert into players (id, date_of_birth, free_agent, name, opgg_link, primary_role, secondary_role, team_id) VALUES ('free_agent-uuid', '2023-01-30', 'TRUE', 'Beedle', 'https://www.op.gg/summoners/euw/Beedle', 1, 2, NULL);
 
 -- CREATE TEAMS --
 insert into teams (id, biography, creation_date, disband_date, name, open_roles, password, tag, team_captain_id) VALUES ('team-uuid-1', 'REEF ESPORTS, we are here to win!', '2023-01-30', NULL, 'REEF ESPORTS', NULL, '00000', 'REE', 'captain-uuid-1');
