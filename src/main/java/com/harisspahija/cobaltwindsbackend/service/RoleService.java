@@ -8,7 +8,10 @@ import com.harisspahija.cobaltwindsbackend.repository.AuthRoleRepository;
 import com.harisspahija.cobaltwindsbackend.repository.UserRepository;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.Collection;
+import java.util.List;
+import java.util.Optional;
 
 @Service
 public class RoleService {
@@ -20,21 +23,22 @@ public class RoleService {
         this.authRoleRepository = authRoleRepository;
     }
 
-    public void grantAuthRole(String userId, Collection<AuthRole> authRoles) {
+    public void addAuthRolesToUser(String userId, List<String> authRoles) {
         User user = userRepository.findById(userId).orElseThrow(() -> new RepositoryNoRecordException(userId));
+        Collection<AuthRole> authRoleObjects = new ArrayList<>();
 
-        for (AuthRole authRole : authRoles) {
-            if (!roleExists(authRole)) {
+        for (String authRole : authRoles) {
+            Optional<AuthRole> foundRole = authRoleRepository.findAuthRoleByAuthRoleName(authRole);
+            if (foundRole.isEmpty()) {
                 throw new BadRequestCustomException("Role " + authRole + " does not exist in the system.");
             }
+            authRoleObjects.add(foundRole.get());
         }
 
-        user.setAuthRoles(authRoles);
+        Collection<AuthRole> existingAuthRoles = user.getAuthRoles();
+        existingAuthRoles.addAll(authRoleObjects);
+        user.setAuthRoles(existingAuthRoles);
         userRepository.save(user);
-    }
-
-    public boolean roleExists(AuthRole authRole) {
-        return authRoleRepository.findAuthRoleByAuthRoleName(authRole.getAuthRoleName()).isPresent();
     }
 
     public Collection<AuthRole> getAllAuthRoles() {

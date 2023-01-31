@@ -7,6 +7,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.Collection;
+import java.util.List;
 
 @RestController
 @RequestMapping("roles")
@@ -19,8 +20,8 @@ public class RoleController {
     }
 
     @PutMapping("{id}")
-    public ResponseEntity<Object> grantAuthRoles(@PathVariable("id") String id, @RequestBody Collection<AuthRole> authRoles) {
-        roleService.grantAuthRole(id, authRoles);
+    public ResponseEntity<Object> grantAuthRoles(@PathVariable("id") String id, @RequestBody List<String> authRoles) {
+        roleService.addAuthRolesToUser(id, authRoles);
         return ResponseEntity.ok().body("User " + id + " has been granted the following roles: " + authRoles);
     }
 
