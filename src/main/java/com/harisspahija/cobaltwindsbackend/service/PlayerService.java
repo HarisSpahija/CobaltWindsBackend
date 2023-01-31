@@ -4,6 +4,7 @@ import com.harisspahija.cobaltwindsbackend.dto.PlayerDto;
 import com.harisspahija.cobaltwindsbackend.dto.PlayerInputDto;
 import com.harisspahija.cobaltwindsbackend.exception.*;
 import com.harisspahija.cobaltwindsbackend.model.Player;
+import com.harisspahija.cobaltwindsbackend.model.Team;
 import com.harisspahija.cobaltwindsbackend.repository.PlayerRepository;
 
 import org.springframework.dao.DataIntegrityViolationException;
@@ -56,16 +57,7 @@ public class PlayerService {
     }
 
     public PlayerDto createPlayer(PlayerInputDto dto) {
-        if (dto.hasInvalidRoles()) {
-            if (dto.hasDuplicateRole())
-                throw new PlayerHasDuplicateRoleException(dto.getPrimaryRole(), dto.getSecondaryRole());
-
-            if (dto.hasFillAndSecondaryRole())
-                throw new PlayerHasPrimaryRoleFillAndSecondaryRoleNotNullException();
-
-            if (dto.hasPrimaryAndNoSecondaryRole())
-                throw new PlayerHasPrimaryRoleAndSecondaryRoleIsNullException(dto.getPrimaryRole());
-        }
+        checkValidRoles(dto);
 
         // TODO: #11 Handle duplicate check
         Optional<Player> playerWithMatchingOpgg = playerRepository.findPlayerByOpggLink(dto.getOpggLink());
@@ -80,13 +72,7 @@ public class PlayerService {
     }
 
     public PlayerDto updatePlayer(String id, PlayerInputDto dto) {
-        if (dto.hasInvalidRoles()) {
-            if (dto.hasDuplicateRole())
-                throw new PlayerHasDuplicateRoleException(dto.getPrimaryRole(), dto.getSecondaryRole());
-
-            if (dto.hasFillAndSecondaryRole())
-                throw new PlayerHasPrimaryRoleFillAndSecondaryRoleNotNullException();
-        }
+        checkValidRoles(dto);
 
         // TODO: #11 Handle duplicate check
         Optional<Player> playerWithMatchingOpgg = playerRepository.findPlayerByOpggLink(dto.getOpggLink());
@@ -112,6 +98,16 @@ public class PlayerService {
         return transferToDto(player);
     }
 
+    private static void checkValidRoles(PlayerInputDto dto) {
+        if (dto.hasInvalidRoles()) {
+            if (dto.hasDuplicateRole())
+                throw new PlayerHasDuplicateRoleException(dto.getPrimaryRole(), dto.getSecondaryRole());
+
+            if (dto.hasFillAndSecondaryRole())
+                throw new PlayerHasPrimaryRoleFillAndSecondaryRoleNotNullException();
+        }
+    }
+
     public Player transferToPlayer(PlayerInputDto dto) {
         var player = new Player();
 
@@ -127,6 +123,10 @@ public class PlayerService {
 
     public PlayerDto transferToDto(Player player) {
         PlayerDto dto = new PlayerDto();
+        Team team = player.getTeam();
+        team.setPassword(null);
+        team.setPlayers(null);
+        team.setTeamCaptain(null);
 
         dto.setId(player.getId());
         dto.setName(player.getName());
@@ -135,6 +135,7 @@ public class PlayerService {
         dto.setPrimaryRole(player.getPrimaryRole());
         dto.setSecondaryRole(player.getSecondaryRole());
         dto.setOpggLink(player.getOpggLink());
+        dto.setTeam(team);
 
         return dto;
     }

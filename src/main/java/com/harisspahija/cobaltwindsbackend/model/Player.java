@@ -34,7 +34,7 @@ public class Player {
     @Column(name = "free_agent")
     private boolean freeAgent;
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "team_id")
     private Team team;
 
