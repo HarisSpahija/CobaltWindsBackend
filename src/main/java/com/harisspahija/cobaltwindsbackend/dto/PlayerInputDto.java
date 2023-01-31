@@ -88,12 +88,11 @@ public class PlayerInputDto {
         return this.primaryRole == Role.Fill && this.secondaryRole != null;
     }
 
-    public Boolean hasPrimaryAndNoSecondaryRole() { return this.primaryRole != Role.Fill && this.secondaryRole == null; }
     public Boolean hasDuplicateRole() {
         return this.primaryRole == this.secondaryRole;
     }
 
     public Boolean hasInvalidRoles() {
-        return this.hasFillAndSecondaryRole() || this.hasPrimaryAndNoSecondaryRole() || this.hasDuplicateRole();
+        return this.hasFillAndSecondaryRole() || this.hasDuplicateRole();
     }
 }

@@ -56,16 +56,7 @@ public class PlayerService {
     }
 
     public PlayerDto createPlayer(PlayerInputDto dto) {
-        if (dto.hasInvalidRoles()) {
-            if (dto.hasDuplicateRole())
-                throw new PlayerHasDuplicateRoleException(dto.getPrimaryRole(), dto.getSecondaryRole());
-
-            if (dto.hasFillAndSecondaryRole())
-                throw new PlayerHasPrimaryRoleFillAndSecondaryRoleNotNullException();
-
-            if (dto.hasPrimaryAndNoSecondaryRole())
-                throw new PlayerHasPrimaryRoleAndSecondaryRoleIsNullException(dto.getPrimaryRole());
-        }
+        checkValidRoles(dto);
 
         // TODO: #11 Handle duplicate check
         Optional<Player> playerWithMatchingOpgg = playerRepository.findPlayerByOpggLink(dto.getOpggLink());
@@ -80,13 +71,7 @@ public class PlayerService {
     }
 
     public PlayerDto updatePlayer(String id, PlayerInputDto dto) {
-        if (dto.hasInvalidRoles()) {
-            if (dto.hasDuplicateRole())
-                throw new PlayerHasDuplicateRoleException(dto.getPrimaryRole(), dto.getSecondaryRole());
-
-            if (dto.hasFillAndSecondaryRole())
-                throw new PlayerHasPrimaryRoleFillAndSecondaryRoleNotNullException();
-        }
+        checkValidRoles(dto);
 
         // TODO: #11 Handle duplicate check
         Optional<Player> playerWithMatchingOpgg = playerRepository.findPlayerByOpggLink(dto.getOpggLink());
@@ -110,6 +95,16 @@ public class PlayerService {
 
         playerRepository.save(player);
         return transferToDto(player);
+    }
+
+    private static void checkValidRoles(PlayerInputDto dto) {
+        if (dto.hasInvalidRoles()) {
+            if (dto.hasDuplicateRole())
+                throw new PlayerHasDuplicateRoleException(dto.getPrimaryRole(), dto.getSecondaryRole());
+
+            if (dto.hasFillAndSecondaryRole())
+                throw new PlayerHasPrimaryRoleFillAndSecondaryRoleNotNullException();
+        }
     }
 
     public Player transferToPlayer(PlayerInputDto dto) {
