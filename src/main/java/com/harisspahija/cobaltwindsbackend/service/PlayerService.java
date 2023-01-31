@@ -4,6 +4,7 @@ import com.harisspahija.cobaltwindsbackend.dto.PlayerDto;
 import com.harisspahija.cobaltwindsbackend.dto.PlayerInputDto;
 import com.harisspahija.cobaltwindsbackend.exception.*;
 import com.harisspahija.cobaltwindsbackend.model.Player;
+import com.harisspahija.cobaltwindsbackend.model.Team;
 import com.harisspahija.cobaltwindsbackend.repository.PlayerRepository;
 
 import org.springframework.dao.DataIntegrityViolationException;
@@ -122,6 +123,10 @@ public class PlayerService {
 
     public PlayerDto transferToDto(Player player) {
         PlayerDto dto = new PlayerDto();
+        Team team = player.getTeam();
+        team.setPassword(null);
+        team.setPlayers(null);
+        team.setTeamCaptain(null);
 
         dto.setId(player.getId());
         dto.setName(player.getName());
@@ -130,6 +135,7 @@ public class PlayerService {
         dto.setPrimaryRole(player.getPrimaryRole());
         dto.setSecondaryRole(player.getSecondaryRole());
         dto.setOpggLink(player.getOpggLink());
+        dto.setTeam(team);
 
         return dto;
     }
