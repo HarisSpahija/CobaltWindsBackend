@@ -81,7 +81,6 @@ public class SecurityConfig  {
                 // Auth
                 .requestMatchers(HttpMethod.POST, "/auth").permitAll()
                 // Public routes
-
                 .requestMatchers(HttpMethod.GET, "/*").permitAll()
                 .requestMatchers(HttpMethod.GET, "/*/*").permitAll()
 
