@@ -50,33 +50,39 @@ public class SecurityConfig  {
         http
                 .httpBasic().disable()
                 .authorizeHttpRequests()
-
-                // Teams
-                .requestMatchers(HttpMethod.POST, "/teams").hasAuthority("PLAYER")
-                .requestMatchers(HttpMethod.POST,"/teams/**/join").hasAuthority("PLAYER")
-                .requestMatchers(HttpMethod.PUT, "/teams/*").hasAnyAuthority("TEAM_CAPTAIN", "ADMIN")
-                .requestMatchers(HttpMethod.DELETE, "/teams/*").hasAnyAuthority("TEAM_CAPTAIN", "ADMIN")
                 // Players
+                .requestMatchers(HttpMethod.GET, "/players/me").hasAuthority("PLAYER")
+                .requestMatchers(HttpMethod.PUT, "/players/me").hasAuthority("PLAYER")
                 .requestMatchers(HttpMethod.POST, "/players").hasAuthority("USER")
-                .requestMatchers(HttpMethod.PUT, "/players/*").hasAnyAuthority("USER", "ADMIN")
-                .requestMatchers(HttpMethod.DELETE, "/players/*").hasAnyAuthority("USER", "ADMIN")
+                .requestMatchers(HttpMethod.GET, "/players/*").permitAll()
+                // Players Admin
+                .requestMatchers(HttpMethod.PUT, "/players/*").hasAnyAuthority("ADMIN")
+                .requestMatchers(HttpMethod.DELETE, "/players/*").hasAnyAuthority("ADMIN")
                 // Roles Admin
+                .requestMatchers(HttpMethod.GET, "/roles").hasAuthority("ADMIN")
                 .requestMatchers(HttpMethod.GET, "/roles/*").hasAuthority("ADMIN")
                 .requestMatchers(HttpMethod.PUT, "/roles/*").hasAuthority("ADMIN")
+                // Users Me
+                .requestMatchers(HttpMethod.GET, "/users/me").hasAuthority("USER")
+                .requestMatchers(HttpMethod.PUT, "/users/me").hasAuthority("USER")
                 // Users Admin
                 .requestMatchers(HttpMethod.GET, "/users").hasAuthority("ADMIN")
                 .requestMatchers(HttpMethod.PUT, "/users/*").hasAuthority("ADMIN")
                 .requestMatchers(HttpMethod.GET, "/users/*").hasAuthority("ADMIN")
-                // Users Me
-                .requestMatchers(HttpMethod.GET, "/users/me").hasAuthority("USER")
-                .requestMatchers(HttpMethod.PUT, "/users/me").hasAuthority("USER")
+
+                // Teams
+                .requestMatchers(HttpMethod.POST, "/teams").hasAuthority("PLAYER")
+                .requestMatchers(HttpMethod.POST,"/teams/*/join").hasAuthority("PLAYER")
+                .requestMatchers(HttpMethod.PUT, "/teams/*").hasAnyAuthority("TEAM_CAPTAIN", "ADMIN")
+                .requestMatchers(HttpMethod.DELETE, "/teams/*").hasAnyAuthority("TEAM_CAPTAIN", "ADMIN")
+
                 // Create new User
                 .requestMatchers(HttpMethod.POST, "/users").permitAll()
                 // Auth
                 .requestMatchers(HttpMethod.POST, "/auth").permitAll()
                 // Public routes
-                .requestMatchers(HttpMethod.GET, "/players/*").permitAll()
                 .requestMatchers(HttpMethod.GET, "/*").permitAll()
+                .requestMatchers(HttpMethod.GET, "/*/*").permitAll()
 
                 .and()
                 .addFilterBefore(new JwtRequestFilter(jwtService, userDetailsService()), UsernamePasswordAuthenticationFilter.class)

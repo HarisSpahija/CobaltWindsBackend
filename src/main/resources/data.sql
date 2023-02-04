@@ -1,5 +1,6 @@
 insert into auth_roles(auth_role_name) values ('USER'), ('ADMIN'), ('TEAM_CAPTAIN'), ('PLAYER');
 
+-- Password: Welkom123 --
 insert into users (id, email, password, player_profile_id) VALUES ('admin-uuid', 'admin@cwl.com', '$2a$10$JiIODQ79Htchfe27OYtS3ORo6lYmJh4qEevbs0J.vsqIf.qKgQiNC', null);
 insert into users (id, email, password, player_profile_id) VALUES ('captain-uuid-1', 'team_captain1@cwl.com', '$2a$10$JiIODQ79Htchfe27OYtS3ORo6lYmJh4qEevbs0J.vsqIf.qKgQiNC', null);
 insert into users (id, email, password, player_profile_id) VALUES ('captain-uuid-2', 'team_captain2@cwl.com', '$2a$10$JiIODQ79Htchfe27OYtS3ORo6lYmJh4qEevbs0J.vsqIf.qKgQiNC', null);

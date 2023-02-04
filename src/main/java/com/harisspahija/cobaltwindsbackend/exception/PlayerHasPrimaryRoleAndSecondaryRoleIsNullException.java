@@ -1,6 +1,6 @@
 package com.harisspahija.cobaltwindsbackend.exception;
 
-import com.harisspahija.cobaltwindsbackend.Role;
+import com.harisspahija.cobaltwindsbackend.enums.Role;
 import com.harisspahija.cobaltwindsbackend.advice.CustomExceptionInterface;
 
 import java.util.HashMap;

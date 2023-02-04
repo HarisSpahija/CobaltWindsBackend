@@ -16,9 +16,11 @@ import java.util.Optional;
 @Service
 public class PlayerService {
     private final PlayerRepository playerRepository;
+    private final UserService userService;
 
-    public PlayerService(PlayerRepository playerRepository) {
+    public PlayerService(PlayerRepository playerRepository,  UserService userService) {
         this.playerRepository = playerRepository;
+        this.userService = userService;
     }
 
     public List<PlayerDto> getAllPlayers() {
@@ -56,10 +58,9 @@ public class PlayerService {
         return transferToDto(player);
     }
 
-    public PlayerDto createPlayer(PlayerInputDto dto) {
+    public PlayerDto createPlayer(PlayerInputDto dto, String username) {
         checkValidRoles(dto);
 
-        // TODO: #11 Handle duplicate check
         Optional<Player> playerWithMatchingOpgg = playerRepository.findPlayerByOpggLink(dto.getOpggLink());
         if (playerWithMatchingOpgg.isPresent()) {
             throw new DataIntegrityViolationException("player with opggLink already exists");
@@ -67,17 +68,18 @@ public class PlayerService {
 
         Player player = transferToPlayer(dto);
         playerRepository.save(player);
+        userService.addPlayerToUsername(player, username);
         return transferToDto(player);
-
     }
+
+
 
     public PlayerDto updatePlayer(String id, PlayerInputDto dto) {
         checkValidRoles(dto);
 
-        // TODO: #11 Handle duplicate check
-        Optional<Player> playerWithMatchingOpgg = playerRepository.findPlayerByOpggLink(dto.getOpggLink());
+        Optional<Player> playerWithMatchingOpgg = playerRepository.findPlayerByOpggLinkExcludingId(dto.getOpggLink(), id);
         if (playerWithMatchingOpgg.isPresent()) {
-            throw new DataIntegrityViolationException("player with opggLink already exists");
+                throw new DataIntegrityViolationException("player with opggLink already exists");
         }
 
         Optional<Player> playerOptional = playerRepository.findById(id);
@@ -124,9 +126,10 @@ public class PlayerService {
     public PlayerDto transferToDto(Player player) {
         PlayerDto dto = new PlayerDto();
         Team team = player.getTeam();
-        team.setPassword(null);
-        team.setPlayers(null);
-        team.setTeamCaptain(null);
+
+        if (team != null) {
+            dto.setTeam(team);
+        }
 
         dto.setId(player.getId());
         dto.setName(player.getName());
@@ -135,7 +138,6 @@ public class PlayerService {
         dto.setPrimaryRole(player.getPrimaryRole());
         dto.setSecondaryRole(player.getSecondaryRole());
         dto.setOpggLink(player.getOpggLink());
-        dto.setTeam(team);
 
         return dto;
     }

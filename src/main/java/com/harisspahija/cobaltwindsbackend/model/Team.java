@@ -1,6 +1,6 @@
 package com.harisspahija.cobaltwindsbackend.model;
 
-import com.harisspahija.cobaltwindsbackend.Role;
+import com.harisspahija.cobaltwindsbackend.enums.Role;
 import jakarta.persistence.*;
 import org.hibernate.annotations.GenericGenerator;
 
