@@ -53,7 +53,7 @@ public class SecurityConfig  {
 
                 // Teams
                 .requestMatchers(HttpMethod.POST, "/teams").hasAuthority("PLAYER")
-                .requestMatchers(HttpMethod.POST,"/teams/**/join").hasAuthority("PLAYER")
+                .requestMatchers(HttpMethod.POST,"/teams/*/join").hasAuthority("PLAYER")
                 .requestMatchers(HttpMethod.PUT, "/teams/*").hasAnyAuthority("TEAM_CAPTAIN", "ADMIN")
                 .requestMatchers(HttpMethod.DELETE, "/teams/*").hasAnyAuthority("TEAM_CAPTAIN", "ADMIN")
                 // Players
