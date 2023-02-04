@@ -81,8 +81,9 @@ public class SecurityConfig  {
                 // Auth
                 .requestMatchers(HttpMethod.POST, "/auth").permitAll()
                 // Public routes
-                .requestMatchers(HttpMethod.GET, "/players/*").permitAll()
+
                 .requestMatchers(HttpMethod.GET, "/*").permitAll()
+                .requestMatchers(HttpMethod.GET, "/*/*").permitAll()
 
                 .and()
                 .addFilterBefore(new JwtRequestFilter(jwtService, userDetailsService()), UsernamePasswordAuthenticationFilter.class)
