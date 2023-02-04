@@ -73,6 +73,16 @@ public class UserService {
         return transferToDto(user);
     }
 
+    public String getPlayerIdByUsername(String username) {
+        User user = userRepository.findUserByEmail(username).orElseThrow(() -> new RepositoryNoRecordException(username));
+
+        Player player = user.getPlayerProfile();
+        if (player != null) {
+            return player.getId();
+        }
+        return null;
+    }
+
     private void addAuthRoleToUser(User user, String role) {
         AuthRole playerAuthRole = authRoleRepository.findAuthRoleByAuthRoleName(role).orElseThrow(() -> new RepositoryNoRecordException(role));
 

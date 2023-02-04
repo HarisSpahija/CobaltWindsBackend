@@ -5,10 +5,8 @@ import com.harisspahija.cobaltwindsbackend.dto.PlayerInputDto;
 import com.harisspahija.cobaltwindsbackend.exception.*;
 import com.harisspahija.cobaltwindsbackend.model.Player;
 import com.harisspahija.cobaltwindsbackend.model.Team;
-import com.harisspahija.cobaltwindsbackend.repository.AuthRoleRepository;
 import com.harisspahija.cobaltwindsbackend.repository.PlayerRepository;
 
-import com.harisspahija.cobaltwindsbackend.repository.UserRepository;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Service;
 import java.util.ArrayList;
@@ -80,10 +78,9 @@ public class PlayerService {
     public PlayerDto updatePlayer(String id, PlayerInputDto dto) {
         checkValidRoles(dto);
 
-        // TODO: #11 Handle duplicate check
-        Optional<Player> playerWithMatchingOpgg = playerRepository.findPlayerByOpggLink(dto.getOpggLink());
+        Optional<Player> playerWithMatchingOpgg = playerRepository.findPlayerByOpggLinkExcludingId(dto.getOpggLink(), id);
         if (playerWithMatchingOpgg.isPresent()) {
-            throw new DataIntegrityViolationException("player with opggLink already exists");
+                throw new DataIntegrityViolationException("player with opggLink already exists");
         }
 
         Optional<Player> playerOptional = playerRepository.findById(id);

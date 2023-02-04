@@ -6,8 +6,6 @@ import jakarta.validation.constraints.*;
 import java.time.LocalDate;
 
 public class PlayerInputDto {
-    private String id;
-
     @NotNull
     @NotBlank
     private String name;
@@ -27,14 +25,6 @@ public class PlayerInputDto {
 
     @NotNull(message = "Free agent must be passed")
     private boolean freeAgent;
-
-    public String getId() {
-        return id;
-    }
-
-    public void setId(String id) {
-        this.id = id;
-    }
 
     public String getName() {
         return name;
