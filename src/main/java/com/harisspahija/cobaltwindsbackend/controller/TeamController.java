@@ -4,7 +4,7 @@ import com.harisspahija.cobaltwindsbackend.dto.TeamDto;
 import com.harisspahija.cobaltwindsbackend.dto.TeamInputDto;
 import com.harisspahija.cobaltwindsbackend.dto.TeamJoinInputDto;
 import com.harisspahija.cobaltwindsbackend.exception.BadRequestBindingException;
-import com.harisspahija.cobaltwindsbackend.exception.BadRequestCustomException;
+import com.harisspahija.cobaltwindsbackend.security.JwtService;
 import com.harisspahija.cobaltwindsbackend.service.TeamService;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -20,9 +20,13 @@ import java.util.List;
 @RequestMapping("teams")
 public class TeamController {
     private final TeamService teamService;
+    private final JwtService jwtService;
 
     @Autowired
-    public TeamController(TeamService teamService) { this.teamService = teamService; }
+    public TeamController(TeamService teamService, JwtService jwtService) {
+        this.teamService = teamService;
+        this.jwtService = jwtService;
+    }
 
     @GetMapping("")
     public ResponseEntity<List<TeamDto>> getAllTeams() {
@@ -38,15 +42,17 @@ public class TeamController {
     }
 
     @PostMapping("")
-    public ResponseEntity<Object> createTeam(@RequestParam(value = "captainId") String captainId, @Valid @RequestBody TeamInputDto teamInputDto, BindingResult bindingResult) {
-        if (captainId.isBlank() || captainId.isEmpty()) {
-            throw new BadRequestCustomException("Must provide captain id");
-        }
+    public ResponseEntity<Object> createTeam(
+            @RequestHeader(name = "Authorization") String token,
+            @Valid @RequestBody TeamInputDto teamInputDto,
+            BindingResult bindingResult) {
+
         if (bindingResult.hasErrors()) {
             throw new BadRequestBindingException(bindingResult);
         }
 
-        TeamDto dto = teamService.createTeam(teamInputDto, captainId);
+        String username = jwtService.extractUsername(token.substring(7));
+        TeamDto dto = teamService.createTeam(teamInputDto, username);
 
         URI location = ServletUriComponentsBuilder.fromCurrentRequest()
                 .path("/{id}")

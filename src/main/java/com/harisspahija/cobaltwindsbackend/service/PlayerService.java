@@ -48,15 +48,15 @@ public class PlayerService {
         return playerDtoList;
     }
 
-    public PlayerDto getPlayerById(String id) {
-        Optional<Player> playerOptional = playerRepository.findById(id);
-        if (playerOptional.isEmpty()) {
-            throw new RepositoryNoRecordException(id);
-        }
+    public Player getPlayerById(String id) {
+        return playerRepository.findById(id).orElseThrow(() -> new RepositoryNoRecordException(id));
+    }
 
-        Player player = playerOptional.get();
+    public PlayerDto getPlayerByIdAsDto(String id) {
+        Player player = playerRepository.findById(id).orElseThrow(() -> new RepositoryNoRecordException(id));
         return transferToDto(player);
     }
+
 
     public PlayerDto createPlayer(PlayerInputDto dto, String username) {
         checkValidRoles(dto);
@@ -71,8 +71,6 @@ public class PlayerService {
         userService.addPlayerToUsername(player, username);
         return transferToDto(player);
     }
-
-
 
     public PlayerDto updatePlayer(String id, PlayerInputDto dto) {
         checkValidRoles(dto);
@@ -144,5 +142,18 @@ public class PlayerService {
 
     public void deletePlayerById(String id) {
         playerRepository.deleteById(id);
+    }
+
+    public Player addTeamToPlayer(String playerProfileId, Team team) {
+        Player player = getPlayerById(playerProfileId);
+
+        if (player.getTeam() != null) {
+            throw new DataIntegrityViolationException("You are already in a team");
+        }
+
+        player.setFreeAgent(false);
+        player.setTeam(team);
+
+        return player;
     }
 }

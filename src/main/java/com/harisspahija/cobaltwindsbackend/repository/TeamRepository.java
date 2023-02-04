@@ -7,6 +7,6 @@ import java.util.Optional;
 
 
 public interface TeamRepository extends JpaRepository<Team, String> {
-    Optional<Team> findTeamByTagAndDisbandDateIsNotNull(String tag);
-    Optional<Team> findTeamByNameAndDisbandDateIsNotNull(String name);
+    Optional<Team> findByTagAndDisbandDateIsNull(String tag);
+    Optional<Team> findByNameAndDisbandDateIsNull(String name);
 }
