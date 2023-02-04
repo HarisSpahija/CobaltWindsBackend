@@ -61,7 +61,6 @@ public class PlayerService {
     public PlayerDto createPlayer(PlayerInputDto dto, String username) {
         checkValidRoles(dto);
 
-        // TODO: #11 Handle duplicate check
         Optional<Player> playerWithMatchingOpgg = playerRepository.findPlayerByOpggLink(dto.getOpggLink());
         if (playerWithMatchingOpgg.isPresent()) {
             throw new DataIntegrityViolationException("player with opggLink already exists");
