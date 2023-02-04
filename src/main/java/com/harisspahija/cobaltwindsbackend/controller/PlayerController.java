@@ -47,7 +47,7 @@ public class PlayerController {
 
     @GetMapping("{id}")
     public ResponseEntity<PlayerDto> getPlayer(@PathVariable("id") String id) {
-        PlayerDto player = playerService.getPlayerById(id);
+        PlayerDto player = playerService.getPlayerByIdAsDto(id);
         return ResponseEntity.ok().body(player);
     }
 
@@ -75,7 +75,7 @@ public class PlayerController {
         String username = jwtService.extractUsername(token.substring(7));
         String playerId = userService.getPlayerIdByUsername(username);
 
-        PlayerDto player = playerService.getPlayerById(playerId);
+        PlayerDto player = playerService.getPlayerByIdAsDto(playerId);
         return ResponseEntity.ok().body(player);
     }
 

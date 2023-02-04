@@ -21,9 +21,14 @@ public class TeamService {
     private final TeamRepository teamRepository;
     private final PlayerRepository playerRepository;
 
-    public TeamService(TeamRepository teamRepository, PlayerRepository playerRepository) {
+    private final UserService userService;
+    private final PlayerService playerService;
+
+    public TeamService(TeamRepository teamRepository, PlayerRepository playerRepository, UserService userService, PlayerService playerService) {
         this.teamRepository = teamRepository;
         this.playerRepository = playerRepository;
+        this.userService = userService;
+        this.playerService = playerService;
     }
 
     public List<TeamDto> getAllTeams() {
@@ -38,7 +43,7 @@ public class TeamService {
             return teamDtoList;
         }
 
-        for(Team team : teamList) {
+        for (Team team : teamList) {
             TeamDto dto = transferToDto(team);
             teamDtoList.add(dto);
         }
@@ -56,35 +61,25 @@ public class TeamService {
         return transferToDto(team);
     }
 
-    public TeamDto createTeam(TeamInputDto dto, String captainId) {
-          Optional<Player> teamCaptain = playerRepository.findById(captainId);
-          if (teamCaptain.isEmpty()) {
-              throw new RepositoryNoRecordException(captainId);
-          }
-          if (teamCaptain.get().getTeam() != null) {
-              throw new DataIntegrityViolationException("You are already in a team");
-          }
+    public TeamDto createTeam(TeamInputDto dto, String username) {
+        String playerProfileId = userService.getPlayerIdByUsername(username);
 
-          handleDuplicate(dto);
+        handleDuplicate(dto);
+        Team team = transferToTeam(dto);
+        team.setPassword("00000");
+        team.setCreationDate(LocalDate.now());
 
-          Team team = transferToTeam(dto);
+        List<Player> players = new ArrayList<>();
+        Player captain = playerService.addTeamToPlayer(playerProfileId, team);
+        players.add(captain);
 
-          List<Player> players = new ArrayList<>();
-          players.add(teamCaptain.get());
+        team.setTeamCaptain(captain);
+        team.setPlayers(players);
 
-          team.setPassword("00000");
-          team.setTeamCaptain(teamCaptain.get());
-          team.setCreationDate(LocalDate.now());
-          team.setPlayers(players);
+        teamRepository.save(team);
+        playerRepository.save(captain);
 
-          teamRepository.save(team);
-
-          teamCaptain.get().setFreeAgent(false);
-          teamCaptain.get().setTeam(team);
-
-          playerRepository.save(teamCaptain.get());
-
-          return transferToDto(team);
+        return transferToDto(team);
     }
 
     public TeamDto updateTeam(String id, TeamInputDto teamInputDto) {
@@ -109,11 +104,11 @@ public class TeamService {
     }
 
     private void handleDuplicate(TeamInputDto teamInputDto) {
-        Optional<Team> teamWithMatchingName = teamRepository.findTeamByNameAndDisbandDateIsNotNull(teamInputDto.getName());
+        Optional<Team> teamWithMatchingName = teamRepository.findByNameAndDisbandDateIsNull(teamInputDto.getName());
         if (teamWithMatchingName.isPresent()) {
             throw new DataIntegrityViolationException("Team with name already exists");
         }
-        Optional<Team> teamWithMatchingTag = teamRepository.findTeamByTagAndDisbandDateIsNotNull(teamInputDto.getTag());
+        Optional<Team> teamWithMatchingTag = teamRepository.findByTagAndDisbandDateIsNull(teamInputDto.getTag());
         if (teamWithMatchingTag.isPresent()) {
             throw new DataIntegrityViolationException("Team with tag already exists");
         }
