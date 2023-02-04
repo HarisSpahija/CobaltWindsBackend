@@ -61,15 +61,16 @@ public class SecurityConfig  {
                 .requestMatchers(HttpMethod.PUT, "/players/*").hasAnyAuthority("USER", "ADMIN")
                 .requestMatchers(HttpMethod.DELETE, "/players/*").hasAnyAuthority("USER", "ADMIN")
                 // Roles Admin
+                .requestMatchers(HttpMethod.GET, "/roles").hasAuthority("ADMIN")
                 .requestMatchers(HttpMethod.GET, "/roles/*").hasAuthority("ADMIN")
                 .requestMatchers(HttpMethod.PUT, "/roles/*").hasAuthority("ADMIN")
+                // Users Me
+                .requestMatchers(HttpMethod.GET, "/users/me").hasAuthority("USER")
+                .requestMatchers(HttpMethod.PUT, "/users/me").hasAuthority("USER")
                 // Users Admin
                 .requestMatchers(HttpMethod.GET, "/users").hasAuthority("ADMIN")
                 .requestMatchers(HttpMethod.PUT, "/users/*").hasAuthority("ADMIN")
                 .requestMatchers(HttpMethod.GET, "/users/*").hasAuthority("ADMIN")
-                // Users Me
-                .requestMatchers(HttpMethod.GET, "/users/me").hasAuthority("USER")
-                .requestMatchers(HttpMethod.PUT, "/users/me").hasAuthority("USER")
                 // Create new User
                 .requestMatchers(HttpMethod.POST, "/users").permitAll()
                 // Auth
