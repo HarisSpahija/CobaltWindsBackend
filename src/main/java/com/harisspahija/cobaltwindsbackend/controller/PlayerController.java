@@ -3,6 +3,7 @@ package com.harisspahija.cobaltwindsbackend.controller;
 import com.harisspahija.cobaltwindsbackend.dto.PlayerDto;
 import com.harisspahija.cobaltwindsbackend.dto.PlayerInputDto;
 import com.harisspahija.cobaltwindsbackend.exception.BadRequestBindingException;
+import com.harisspahija.cobaltwindsbackend.security.JwtService;
 import com.harisspahija.cobaltwindsbackend.service.PlayerService;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -20,10 +21,13 @@ import java.util.Optional;
 public class PlayerController {
 
     private final PlayerService playerService;
+    private final JwtService jwtService;
+
 
     @Autowired
-    public PlayerController(PlayerService playerService) {
+    public PlayerController(PlayerService playerService, JwtService jwtService) {
         this.playerService = playerService;
+        this.jwtService = jwtService;
     }
 
     @GetMapping("")
@@ -39,18 +43,21 @@ public class PlayerController {
     }
 
     @GetMapping("{id}")
-    public ResponseEntity<PlayerDto> getPlayer(@PathVariable("id")String id) {
+    public ResponseEntity<PlayerDto> getPlayer(@PathVariable("id") String id) {
         PlayerDto player = playerService.getPlayerById(id);
         return ResponseEntity.ok().body(player);
     }
 
     @PostMapping("")
-    public ResponseEntity<Object> createPlayer(@Valid @RequestBody PlayerInputDto playerInputDto, BindingResult bindingResult) {
+    public ResponseEntity<Object> createPlayer(@RequestHeader(name = "Authorization") String token,
+                                               @Valid @RequestBody PlayerInputDto playerInputDto,
+                                               BindingResult bindingResult) {
         if (bindingResult.hasErrors()) {
             throw new BadRequestBindingException(bindingResult);
         }
 
-        PlayerDto dto = playerService.createPlayer(playerInputDto);
+        String username = jwtService.extractUsername(token.substring(7));
+        PlayerDto dto = playerService.createPlayer(playerInputDto, username);
 
         URI location = ServletUriComponentsBuilder.fromCurrentRequest()
                 .path("/{id}")

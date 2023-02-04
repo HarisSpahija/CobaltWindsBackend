@@ -1,6 +1,6 @@
 package com.harisspahija.cobaltwindsbackend.dto;
 
-import com.harisspahija.cobaltwindsbackend.Role;
+import com.harisspahija.cobaltwindsbackend.enums.Role;
 import jakarta.validation.constraints.*;
 
 import java.time.LocalDate;

@@ -5,8 +5,10 @@ import com.harisspahija.cobaltwindsbackend.dto.PlayerInputDto;
 import com.harisspahija.cobaltwindsbackend.exception.*;
 import com.harisspahija.cobaltwindsbackend.model.Player;
 import com.harisspahija.cobaltwindsbackend.model.Team;
+import com.harisspahija.cobaltwindsbackend.repository.AuthRoleRepository;
 import com.harisspahija.cobaltwindsbackend.repository.PlayerRepository;
 
+import com.harisspahija.cobaltwindsbackend.repository.UserRepository;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Service;
 import java.util.ArrayList;
@@ -16,9 +18,11 @@ import java.util.Optional;
 @Service
 public class PlayerService {
     private final PlayerRepository playerRepository;
+    private final UserService userService;
 
-    public PlayerService(PlayerRepository playerRepository) {
+    public PlayerService(PlayerRepository playerRepository,  UserService userService) {
         this.playerRepository = playerRepository;
+        this.userService = userService;
     }
 
     public List<PlayerDto> getAllPlayers() {
@@ -56,7 +60,7 @@ public class PlayerService {
         return transferToDto(player);
     }
 
-    public PlayerDto createPlayer(PlayerInputDto dto) {
+    public PlayerDto createPlayer(PlayerInputDto dto, String username) {
         checkValidRoles(dto);
 
         // TODO: #11 Handle duplicate check
@@ -67,9 +71,11 @@ public class PlayerService {
 
         Player player = transferToPlayer(dto);
         playerRepository.save(player);
+        userService.addPlayerToUsername(player, username);
         return transferToDto(player);
-
     }
+
+
 
     public PlayerDto updatePlayer(String id, PlayerInputDto dto) {
         checkValidRoles(dto);
@@ -124,9 +130,10 @@ public class PlayerService {
     public PlayerDto transferToDto(Player player) {
         PlayerDto dto = new PlayerDto();
         Team team = player.getTeam();
-        team.setPassword(null);
-        team.setPlayers(null);
-        team.setTeamCaptain(null);
+
+        if (team != null) {
+            dto.setTeam(team);
+        }
 
         dto.setId(player.getId());
         dto.setName(player.getName());
@@ -135,7 +142,6 @@ public class PlayerService {
         dto.setPrimaryRole(player.getPrimaryRole());
         dto.setSecondaryRole(player.getSecondaryRole());
         dto.setOpggLink(player.getOpggLink());
-        dto.setTeam(team);
 
         return dto;
     }

@@ -1,6 +1,6 @@
 package com.harisspahija.cobaltwindsbackend.dto;
 
-import com.harisspahija.cobaltwindsbackend.Role;
+import com.harisspahija.cobaltwindsbackend.enums.Role;
 import com.harisspahija.cobaltwindsbackend.model.Team;
 
 import java.time.LocalDate;
