@@ -51,13 +51,11 @@ public class UserService {
         user.setEmail(dto.getEmail());
         user.setPassword(encoder.encode(dto.getPassword()));
         user.setAuthRoles(authRoles);
-
         userRepository.save(user);
-
         return transferToDto(user);
     }
 
-    private UserDto transferToDto(User user) {
+    public UserDto transferToDto(User user) {
         UserDto dto = new UserDto();
 
         dto.setId(user.getId());

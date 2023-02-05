@@ -9,6 +9,7 @@ import java.util.Collection;
 public class UserDto {
     private String id;
     private String email;
+
     @JsonIgnoreProperties({"user"})
     private Collection<AuthRole> authRoles;
 

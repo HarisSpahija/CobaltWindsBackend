@@ -1,0 +1,150 @@
+
+
+
+<!DOCTYPE html>
+<html id="htmlId">
+<head>
+  <title>Coverage Report > RoleService</title>
+  <style type="text/css">
+    @import "../../css/coverage.css";
+    @import "../../css/idea.min.css";
+  </style>
+  <script type="text/javascript" src="../../js/highlight.min.js"></script>
+  <script type="text/javascript" src="../../js/highlightjs-line-numbers.min.js"></script>
+</head>
+
+<body>
+<div class="content">
+<div class="breadCrumbs">
+Current scope:     <a href="../../index.html">all classes</a>
+    <span class="separator">|</span>
+    <a href="../index.html">com.harisspahija.cobaltwindsbackend.service</a>
+</div>
+
+<h1>Coverage Summary for Class: RoleService (com.harisspahija.cobaltwindsbackend.service)</h1>
+
+<table class="coverageStats">
+<tr>
+  <th class="name">Class</th>
+<th class="coverageStat 
+">
+  Class, %
+</th>
+<th class="coverageStat 
+">
+  Method, %
+</th>
+<th class="coverageStat 
+">
+  Line, %
+</th>
+</tr>
+<tr>
+  <td class="name">RoleService</td>
+<td class="coverageStat">
+  <span class="percent">
+    0%
+  </span>
+  <span class="absValue">
+    (0/1)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    0%
+  </span>
+  <span class="absValue">
+    (0/3)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    0%
+  </span>
+  <span class="absValue">
+    (0/16)
+  </span>
+</td>
+</tr>
+
+</table>
+
+<br/>
+<br/>
+
+
+<pre>
+<code class="sourceCode" id="sourceCode">&nbsp;package com.harisspahija.cobaltwindsbackend.service;
+&nbsp;
+&nbsp;import com.harisspahija.cobaltwindsbackend.exception.BadRequestCustomException;
+&nbsp;import com.harisspahija.cobaltwindsbackend.exception.RepositoryNoRecordException;
+&nbsp;import com.harisspahija.cobaltwindsbackend.model.AuthRole;
+&nbsp;import com.harisspahija.cobaltwindsbackend.model.User;
+&nbsp;import com.harisspahija.cobaltwindsbackend.repository.AuthRoleRepository;
+&nbsp;import com.harisspahija.cobaltwindsbackend.repository.UserRepository;
+&nbsp;import org.springframework.stereotype.Service;
+&nbsp;
+&nbsp;import java.util.ArrayList;
+&nbsp;import java.util.Collection;
+&nbsp;import java.util.List;
+&nbsp;import java.util.Optional;
+&nbsp;
+&nbsp;@Service
+&nbsp;public class RoleService {
+&nbsp;    private final UserRepository userRepository;
+&nbsp;    private final AuthRoleRepository authRoleRepository;
+&nbsp;
+<b class="nc">&nbsp;    public RoleService(UserRepository userRepository, AuthRoleRepository authRoleRepository) {</b>
+<b class="nc">&nbsp;        this.userRepository = userRepository;</b>
+<b class="nc">&nbsp;        this.authRoleRepository = authRoleRepository;</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    public void addAuthRolesToUser(String userId, List&lt;String&gt; authRoles) {
+<b class="nc">&nbsp;        User user = userRepository.findById(userId).orElseThrow(() -&gt; new RepositoryNoRecordException(userId));</b>
+<b class="nc">&nbsp;        Collection&lt;AuthRole&gt; authRoleObjects = new ArrayList&lt;&gt;();</b>
+&nbsp;
+<b class="nc">&nbsp;        for (String authRole : authRoles) {</b>
+<b class="nc">&nbsp;            Optional&lt;AuthRole&gt; foundRole = authRoleRepository.findAuthRoleByAuthRoleName(authRole);</b>
+<b class="nc">&nbsp;            if (foundRole.isEmpty()) {</b>
+<b class="nc">&nbsp;                throw new BadRequestCustomException(&quot;Role &quot; + authRole + &quot; does not exist in the system.&quot;);</b>
+&nbsp;            }
+<b class="nc">&nbsp;            authRoleObjects.add(foundRole.get());</b>
+<b class="nc">&nbsp;        }</b>
+&nbsp;
+<b class="nc">&nbsp;        Collection&lt;AuthRole&gt; existingAuthRoles = user.getAuthRoles();</b>
+<b class="nc">&nbsp;        existingAuthRoles.addAll(authRoleObjects);</b>
+<b class="nc">&nbsp;        user.setAuthRoles(existingAuthRoles);</b>
+<b class="nc">&nbsp;        userRepository.save(user);</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    public Collection&lt;AuthRole&gt; getAllAuthRoles() {
+<b class="nc">&nbsp;       return authRoleRepository.findAll();</b>
+&nbsp;    }
+&nbsp;}
+</code>
+</pre>
+</div>
+
+<script type="text/javascript">
+(function() {
+    var msie = false, msie9 = false;
+    /*@cc_on
+      msie = true;
+      @if (@_jscript_version >= 9)
+        msie9 = true;
+      @end
+    @*/
+
+    if (!msie || msie && msie9) {
+      hljs.highlightAll()
+      hljs.initLineNumbersOnLoad();
+    }
+})();
+</script>
+
+<div class="footer">
+    
+    <div style="float:right;">generated on 2023-02-05 09:09</div>
+</div>
+</body>
+</html>
