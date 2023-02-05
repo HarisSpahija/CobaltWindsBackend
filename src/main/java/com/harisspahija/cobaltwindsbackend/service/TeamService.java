@@ -79,6 +79,8 @@ public class TeamService {
         teamRepository.save(team);
         playerRepository.save(captain);
 
+        userService.addRoleToUsername(username, "TEAM_CAPTAIN");
+
         return transferToDto(team);
     }
 
