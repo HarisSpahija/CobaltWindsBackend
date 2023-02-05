@@ -1,5 +1,10 @@
 insert into auth_roles(auth_role_name) values ('USER'), ('ADMIN'), ('TEAM_CAPTAIN'), ('PLAYER');
 
+insert into competitions(id, name, description, max_team_count, start_date, registration_start_date, status) VALUES ('competition-uuid1', 'Cobalt Winds Summer Showdown', 'Are you ready for rumble?', 128, '2023-05-01', '2023-03-05', 0);
+insert into competitions(id, name, description, max_team_count, start_date, registration_start_date, status) VALUES ('competition-uuid2', 'Cobalt Winds Mini March Battle', 'Are you ready for rumble?', 32, '2023-03-01', '2022-02-01', 1);
+insert into competitions(id, name, description, max_team_count, start_date, registration_start_date, status) VALUES ('competition-uuid3', 'Cobalt Winds Spring Cup', 'Are you ready for rumble?', 64, '2023-02-01', '2022-12-01', 2);
+insert into competitions(id, name, description, max_team_count, start_date, registration_start_date, status) VALUES ('competition-uuid4', 'Cobalt Winds Winter League', 'Are you ready for rumble?', 256, '2022-09-01', '2022-08-01', 3);
+
 -- Password: Welkom123 --
 insert into users (id, email, password, player_profile_id) VALUES ('admin-uuid', 'admin@cwl.com', '$2a$10$JiIODQ79Htchfe27OYtS3ORo6lYmJh4qEevbs0J.vsqIf.qKgQiNC', null);
 insert into users (id, email, password, player_profile_id) VALUES ('captain-uuid-1', 'team_captain1@cwl.com', '$2a$10$JiIODQ79Htchfe27OYtS3ORo6lYmJh4qEevbs0J.vsqIf.qKgQiNC', null);
