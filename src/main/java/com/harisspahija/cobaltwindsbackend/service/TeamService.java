@@ -2,6 +2,7 @@ package com.harisspahija.cobaltwindsbackend.service;
 
 import com.harisspahija.cobaltwindsbackend.dto.TeamDto;
 import com.harisspahija.cobaltwindsbackend.dto.TeamInputDto;
+import com.harisspahija.cobaltwindsbackend.dto.TeamPrivateDto;
 import com.harisspahija.cobaltwindsbackend.exception.ForbiddenActionException;
 import com.harisspahija.cobaltwindsbackend.exception.RepositoryNoRecordException;
 import com.harisspahija.cobaltwindsbackend.model.Player;
@@ -56,12 +57,12 @@ public class TeamService {
         return transferToDto(team);
     }
 
-    public TeamDto getTeamByCaptainId(String id) {
+    public TeamPrivateDto getTeamByCaptainId(String id) {
         Team team = teamRepository.findTeamByTeamCaptainId(id).orElseThrow(() -> new RepositoryNoRecordException(id));
-        return transferToDto(team);
+        return transferToPrivateDto(team);
     }
 
-    public TeamDto createTeam(TeamInputDto dto, String username) {
+    public TeamPrivateDto createTeam(TeamInputDto dto, String username) {
         String playerProfileId = userService.getPlayerIdByUsername(username);
 
         handleDuplicate(dto);
@@ -81,21 +82,21 @@ public class TeamService {
 
         userService.addRoleToUsername(username, "TEAM_CAPTAIN");
 
-        return transferToDto(team);
+        return transferToPrivateDto(team);
     }
 
-    public TeamDto updateTeamByTeamId(String id, TeamInputDto teamInputDto) {
+    public TeamPrivateDto updateTeamByTeamId(String id, TeamInputDto teamInputDto) {
         handleDuplicate(teamInputDto);
         Team team = teamRepository.findById(id).orElseThrow(() -> new RepositoryNoRecordException(id));
         updateTeamDetails(team, teamInputDto);
-        return transferToDto(team);
+        return transferToPrivateDto(team);
     }
 
-    public TeamDto updateTeamByCaptainId(String playerId, TeamInputDto teamInputDto) {
+    public TeamPrivateDto updateTeamByCaptainId(String playerId, TeamInputDto teamInputDto) {
         Team team = teamRepository.findTeamByTeamCaptainId(playerId).orElseThrow(() -> new RepositoryNoRecordException(playerId));
         updateTeamDetails(team, teamInputDto);
 
-        return transferToDto(team);
+        return transferToPrivateDto(team);
     }
 
     private void updateTeamDetails(Team team, TeamInputDto teamInputDto) {
@@ -120,9 +121,7 @@ public class TeamService {
         }
     }
 
-    private TeamDto transferToDto(Team team) {
-        TeamDto dto = new TeamDto();
-
+    private void transferCommonProperties(Team team, TeamDto dto) {
         dto.setId(team.getId());
         dto.setName(team.getName());
         dto.setTag(team.getTag());
@@ -133,7 +132,18 @@ public class TeamService {
         dto.setTeamCaptain(team.getTeamCaptain());
         dto.setPlayers(team.getPlayers() == null ? new ArrayList<>() : team.getPlayers());
         dto.setOpenRoles(team.getOpenRoles() == null ? new ArrayList<>() : team.getOpenRoles());
+    }
 
+    private TeamDto transferToDto(Team team) {
+        TeamDto dto = new TeamDto();
+        transferCommonProperties(team, dto);
+        return dto;
+    }
+
+    private TeamPrivateDto transferToPrivateDto(Team team) {
+        TeamPrivateDto dto = new TeamPrivateDto();
+        transferCommonProperties(team, dto);
+        dto.setPassword(team.getPassword());
         return dto;
     }
 
@@ -149,7 +159,7 @@ public class TeamService {
         return team;
     }
 
-    public TeamDto joinTeam(String teamId, String playerId, String password) {
+    public TeamPrivateDto joinTeam(String teamId, String playerId, String password) {
         Team team = teamRepository.findById(teamId).orElseThrow(() -> new RepositoryNoRecordException(teamId));
 
         if (team.getPlayers().size() >= 7) {
@@ -159,30 +169,25 @@ public class TeamService {
             throw new ForbiddenActionException("Wrong password");
         }
 
-        Player player = playerRepository.findById(playerId).orElseThrow(() -> new RepositoryNoRecordException(playerId));
+        Player player = playerService.getPlayerById(playerId);
 
         if (player.getTeam() != null) {
             throw new DataIntegrityViolationException("You are already in a team");
         }
+
         List<Player> players = team.getPlayers();
         players.add(player);
-
         team.setPlayers(players);
-        teamRepository.save(team);
-
-        return transferToDto(team);
+        Team savedTeam = teamRepository.save(team);
+        Player newTeamMember = playerService.addTeamToPlayer(playerId, savedTeam);
+        playerRepository.save(newTeamMember);
+        return transferToPrivateDto(savedTeam);
     }
 
-    public void disbandTeam(String id) {
-        Optional<Team> team = teamRepository.findById(id);
+    private void disbandTeam(Team team) {
+        List<Player> players = team.getPlayers();
 
-        if (team.isEmpty()) {
-            throw new RepositoryNoRecordException(id);
-        }
-
-        List<Player> players = team.get().getPlayers();
-
-        for (Player player : team.get().getPlayers()) {
+        for (Player player : team.getPlayers()) {
             player.setTeam(null);
         }
 
@@ -190,12 +195,22 @@ public class TeamService {
 
         // TODO: #12 - Find team in matches
         if (false) {
-            teamRepository.deleteById(id);
+            teamRepository.deleteById(team.getId());
         } else {
-            team.get().setOpenRoles(null);
-            team.get().setTeamCaptain(null);
-            team.get().setDisbandDate(LocalDate.now());
-            teamRepository.save(team.get());
+            team.setOpenRoles(null);
+            team.setTeamCaptain(null);
+            team.setDisbandDate(LocalDate.now());
+            teamRepository.save(team);
         }
+    }
+
+    public void disbandTeamById(String id) {
+        Team team = teamRepository.findById(id).orElseThrow(() -> new RepositoryNoRecordException(id));
+        disbandTeam(team);
+    }
+
+    public void disbandTeamByCaptainId(String captainId) {
+        Team team = teamRepository.findTeamByTeamCaptainId(captainId).orElseThrow(() -> new RepositoryNoRecordException(captainId));
+        disbandTeam(team);
     }
 }

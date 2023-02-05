@@ -13,6 +13,7 @@ public class TeamDto {
     private String tag;
     private String teamLogo;
     private String biography;
+
     private LocalDate creationDate;
     private LocalDate disbandDate;
 
@@ -22,6 +23,9 @@ public class TeamDto {
 
     @JsonIgnoreProperties({"hibernateLazyInitializer", "team"})
     private List<Player> players;
+
+    public TeamDto() {
+    }
 
     public List<Player> getPlayers() {
         return players;

@@ -3,9 +3,9 @@ package com.harisspahija.cobaltwindsbackend.controller;
 import com.harisspahija.cobaltwindsbackend.dto.TeamDto;
 import com.harisspahija.cobaltwindsbackend.dto.TeamInputDto;
 import com.harisspahija.cobaltwindsbackend.dto.TeamJoinInputDto;
+import com.harisspahija.cobaltwindsbackend.dto.TeamPrivateDto;
 import com.harisspahija.cobaltwindsbackend.exception.BadRequestBindingException;
 import com.harisspahija.cobaltwindsbackend.security.JwtService;
-import com.harisspahija.cobaltwindsbackend.service.PlayerService;
 import com.harisspahija.cobaltwindsbackend.service.TeamService;
 import com.harisspahija.cobaltwindsbackend.service.UserService;
 import jakarta.validation.Valid;
@@ -44,7 +44,7 @@ public class TeamController {
     ) {
         String username = jwtService.extractUsername(token.substring(7));
         String playerId = userService.getPlayerIdByUsername(username);
-        TeamDto team = teamService.getTeamByCaptainId(playerId);
+        TeamPrivateDto team = teamService.getTeamByCaptainId(playerId);
         return ResponseEntity.ok().body(team);
     }
 
@@ -55,7 +55,7 @@ public class TeamController {
         }
 
         String username = jwtService.extractUsername(token.substring(7));
-        TeamDto dto = teamService.createTeam(teamInputDto, username);
+        TeamPrivateDto dto = teamService.createTeam(teamInputDto, username);
 
         URI location = ServletUriComponentsBuilder.fromCurrentRequest().path("/my-team").build().toUri();
 
@@ -71,13 +71,19 @@ public class TeamController {
         String username = jwtService.extractUsername(token.substring(7));
         String playerId = userService.getPlayerIdByUsername(username);
 
-        TeamDto dto = teamService.updateTeamByCaptainId(playerId, teamInputDto);
+        TeamPrivateDto dto = teamService.updateTeamByCaptainId(playerId, teamInputDto);
         return ResponseEntity.ok().body(dto);
     }
 
-    // TODO: Implement disbanding based on team captain id
     @DeleteMapping("my-team")
-    public void deleteTeamMe() {
+    public ResponseEntity<Object> deleteTeamMe(
+            @RequestHeader(name = "Authorization") String token
+    ) {
+        String username = jwtService.extractUsername(token.substring(7));
+        String playerId = userService.getPlayerIdByUsername(username);
+
+        teamService.disbandTeamByCaptainId(playerId);
+        return ResponseEntity.noContent().build();
     }
 
     // TODO: Implement leaving based on player id
@@ -85,12 +91,14 @@ public class TeamController {
     public void leaveTeamMe() {}
 
     @PostMapping("{id}/join")
-    public ResponseEntity<Object> joinTeam(@PathVariable("id") String teamId, @Valid @RequestBody TeamJoinInputDto teamJoinInputDto, BindingResult bindingResult) {
+    public ResponseEntity<Object> joinTeam(@RequestHeader(name = "Authorization") String token, @PathVariable("id") String teamId, @Valid @RequestBody TeamJoinInputDto teamJoinInputDto, BindingResult bindingResult) {
         if (bindingResult.hasErrors()) {
             throw new BadRequestBindingException(bindingResult);
         }
+        String username = jwtService.extractUsername(token.substring(7));
+        String playerId = userService.getPlayerIdByUsername(username);
 
-        TeamDto dto = teamService.joinTeam(teamId, teamJoinInputDto.getPlayerId(), teamJoinInputDto.getPassword());
+        TeamPrivateDto dto = teamService.joinTeam(teamId, playerId, teamJoinInputDto.getPassword());
         return ResponseEntity.ok().body(dto);
     }
 
@@ -99,7 +107,7 @@ public class TeamController {
         if (bindingResult.hasErrors()) {
             throw new BadRequestBindingException(bindingResult);
         }
-        TeamDto dto = teamService.updateTeamByTeamId(teamId, teamInputDto);
+        TeamPrivateDto dto = teamService.updateTeamByTeamId(teamId, teamInputDto);
         return ResponseEntity.ok().body(dto);
     }
 
@@ -111,7 +119,7 @@ public class TeamController {
 
     @DeleteMapping("{id}")
     public ResponseEntity<Object> disbandTeam(@PathVariable("id") String id) {
-        teamService.disbandTeam(id);
+        teamService.disbandTeamById(id);
         return ResponseEntity.noContent().build();
     }
 }
