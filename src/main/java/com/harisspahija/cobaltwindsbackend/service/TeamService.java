@@ -52,12 +52,12 @@ public class TeamService {
     }
 
     public TeamDto getTeamById(String id) {
-        Optional<Team> teamOptional = teamRepository.findById(id);
-        if (teamOptional.isEmpty()) {
-            throw new RepositoryNoRecordException(id);
-        }
+        Team team = teamRepository.findById(id).orElseThrow(() -> new RepositoryNoRecordException(id));
+        return transferToDto(team);
+    }
 
-        Team team = teamOptional.get();
+    public TeamDto getTeamByCaptainId(String id) {
+        Team team = teamRepository.findTeamByTeamCaptainId(id).orElseThrow(() -> new RepositoryNoRecordException(id));
         return transferToDto(team);
     }
 
@@ -82,16 +82,21 @@ public class TeamService {
         return transferToDto(team);
     }
 
-    public TeamDto updateTeam(String id, TeamInputDto teamInputDto) {
+    public TeamDto updateTeamByTeamId(String id, TeamInputDto teamInputDto) {
         handleDuplicate(teamInputDto);
+        Team team = teamRepository.findById(id).orElseThrow(() -> new RepositoryNoRecordException(id));
+        updateTeamDetails(team, teamInputDto);
+        return transferToDto(team);
+    }
 
-        Optional<Team> optionalTeam = teamRepository.findById(id);
-        if (optionalTeam.isEmpty()) {
-            throw new RepositoryNoRecordException(id);
-        }
+    public TeamDto updateTeamByCaptainId(String playerId, TeamInputDto teamInputDto) {
+        Team team = teamRepository.findTeamByTeamCaptainId(playerId).orElseThrow(() -> new RepositoryNoRecordException(playerId));
+        updateTeamDetails(team, teamInputDto);
 
-        Team team = optionalTeam.get();
+        return transferToDto(team);
+    }
 
+    private void updateTeamDetails(Team team, TeamInputDto teamInputDto) {
         team.setPassword(teamInputDto.getPassword());
         team.setName(teamInputDto.getName());
         team.setTeamLogo(teamInputDto.getTeamLogo());
@@ -100,7 +105,6 @@ public class TeamService {
         team.setOpenRoles(teamInputDto.getOpenRoles());
 
         teamRepository.save(team);
-        return transferToDto(team);
     }
 
     private void handleDuplicate(TeamInputDto teamInputDto) {

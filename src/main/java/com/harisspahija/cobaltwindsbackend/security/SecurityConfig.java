@@ -72,9 +72,15 @@ public class SecurityConfig  {
 
                 // Teams
                 .requestMatchers(HttpMethod.POST, "/teams").hasAuthority("PLAYER")
-                .requestMatchers(HttpMethod.POST,"/teams/*/join").hasAuthority("PLAYER")
-                .requestMatchers(HttpMethod.PUT, "/teams/*").hasAnyAuthority("TEAM_CAPTAIN", "ADMIN")
-                .requestMatchers(HttpMethod.DELETE, "/teams/*").hasAnyAuthority("TEAM_CAPTAIN", "ADMIN")
+                .requestMatchers(HttpMethod.POST, "/teams/*/join").hasAuthority("PLAYER")
+                .requestMatchers(HttpMethod.PUT, "teams/my-team/leave").hasAuthority("PLAYER")
+                .requestMatchers(HttpMethod.GET, "/teams/my-team").hasAnyAuthority("TEAM_CAPTAIN", "PLAYER")
+                .requestMatchers(HttpMethod.PUT, "/teams/my-team").hasAuthority("TEAM_CAPTAIN")
+                .requestMatchers(HttpMethod.DELETE, "/teams/my-team").hasAuthority("TEAM_CAPTAIN")
+
+                // Teams Admin
+                .requestMatchers(HttpMethod.PUT, "/teams/*").hasAnyAuthority("ADMIN")
+                .requestMatchers(HttpMethod.DELETE, "/teams/*").hasAnyAuthority("ADMIN")
 
                 // Create new User
                 .requestMatchers(HttpMethod.POST, "/users").permitAll()
