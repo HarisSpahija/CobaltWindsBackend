@@ -16,11 +16,11 @@ public class TeamDto {
     private LocalDate creationDate;
     private LocalDate disbandDate;
 
-    @JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
+    @JsonIgnoreProperties({"hibernateLazyInitializer", "team"})
     private Player teamCaptain;
     private List<Role> openRoles;
 
-    @JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
+    @JsonIgnoreProperties({"hibernateLazyInitializer", "team"})
     private List<Player> players;
 
     public List<Player> getPlayers() {

@@ -1,5 +1,7 @@
 package com.harisspahija.cobaltwindsbackend.dto;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.harisspahija.cobaltwindsbackend.enums.Role;
 import com.harisspahija.cobaltwindsbackend.model.Team;
 
@@ -36,6 +38,7 @@ public class PlayerDto {
         this.name = name;
     }
 
+    @JsonIgnoreProperties({ "teamCaptain", "players", "password"})
     public Team getTeam() {
         return team;
     }
