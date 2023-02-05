@@ -115,11 +115,6 @@ public class UserService {
         addAuthRoleToUser(user, role);
     }
 
-    public void removeRoleFromUsername(String username, String role) {
-        User user = userRepository.findUserByEmail(username).orElseThrow(() -> new RepositoryNoRecordException(username));
-        removeAuthRoleFromUser(user, role);
-    }
-
     public void addRoleToUserByPlayerId(String playerId, String role) {
         User user = userRepository.findUserByPlayerProfileId(playerId).orElseThrow(() -> new RepositoryNoRecordException(playerId));
         addAuthRoleToUser(user, role);
