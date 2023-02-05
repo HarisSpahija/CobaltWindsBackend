@@ -119,4 +119,14 @@ public class UserService {
         User user = userRepository.findUserByEmail(username).orElseThrow(() -> new RepositoryNoRecordException(username));
         removeAuthRoleFromUser(user, role);
     }
+
+    public void addRoleToUserByPlayerId(String playerId, String role) {
+        User user = userRepository.findUserByPlayerProfileId(playerId).orElseThrow(() -> new RepositoryNoRecordException(playerId));
+        addAuthRoleToUser(user, role);
+    }
+
+    public void removeRoleFromUserByPlayerId(String playerId, String role) {
+        User user = userRepository.findUserByPlayerProfileId(playerId).orElseThrow(() -> new RepositoryNoRecordException(playerId));
+        removeAuthRoleFromUser(user, role);
+    }
 }

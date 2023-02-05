@@ -44,7 +44,7 @@ public class TeamController {
     ) {
         String username = jwtService.extractUsername(token.substring(7));
         String playerId = userService.getPlayerIdByUsername(username);
-        TeamPrivateDto team = teamService.getTeamByCaptainId(playerId);
+        TeamPrivateDto team = teamService.getTeamByPlayerId(playerId);
         return ResponseEntity.ok().body(team);
     }
 
@@ -86,9 +86,16 @@ public class TeamController {
         return ResponseEntity.noContent().build();
     }
 
-    // TODO: Implement leaving based on player id
     @PutMapping("my-team/leave")
-    public void leaveTeamMe() {}
+    public ResponseEntity<Object> leaveTeamMe(
+            @RequestHeader(name = "Authorization") String token
+    ) {
+        String username = jwtService.extractUsername(token.substring(7));
+        String playerId = userService.getPlayerIdByUsername(username);
+
+        teamService.leaveTeam(playerId);
+        return ResponseEntity.noContent().build();
+    }
 
     @PostMapping("{id}/join")
     public ResponseEntity<Object> joinTeam(@RequestHeader(name = "Authorization") String token, @PathVariable("id") String teamId, @Valid @RequestBody TeamJoinInputDto teamJoinInputDto, BindingResult bindingResult) {

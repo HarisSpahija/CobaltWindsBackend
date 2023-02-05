@@ -57,8 +57,8 @@ public class TeamService {
         return transferToDto(team);
     }
 
-    public TeamPrivateDto getTeamByCaptainId(String id) {
-        Team team = teamRepository.findTeamByTeamCaptainId(id).orElseThrow(() -> new RepositoryNoRecordException(id));
+    public TeamPrivateDto getTeamByPlayerId(String id) {
+        Team team = playerService.getPlayerById(id).getTeam();
         return transferToPrivateDto(team);
     }
 
@@ -202,6 +202,34 @@ public class TeamService {
             team.setDisbandDate(LocalDate.now());
             teamRepository.save(team);
         }
+    }
+
+    public void leaveTeam(String playerId) {
+        Player player = playerService.getPlayerById(playerId);
+
+        if(player.getTeam() == null) {
+            throw new DataIntegrityViolationException("You are not in a team");
+        }
+
+        Team team = player.getTeam();
+        List<Player> players = team.getPlayers();
+        players.remove(player);
+
+        if (team.getTeamCaptain() == player) {
+            userService.removeRoleFromUserByPlayerId(playerId, "TEAM_CAPTAIN");
+            if (!players.isEmpty()) {
+                Player newCaptain = players.get(0);
+                team.setTeamCaptain(newCaptain);
+                userService.addRoleToUserByPlayerId(newCaptain.getId(), "TEAM_CAPTAIN");
+            } else {
+                disbandTeamByCaptainId(playerId);
+            }
+        }
+
+        player.setTeam(null);
+
+        playerRepository.save(player);
+        teamRepository.save(team);
     }
 
     public void disbandTeamById(String id) {
