@@ -13,6 +13,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 import java.net.URI;
@@ -49,7 +50,9 @@ public class TeamController {
     }
 
     @PostMapping("")
-    public ResponseEntity<Object> createTeam(@RequestHeader(name = "Authorization") String token, @Valid @RequestBody TeamInputDto teamInputDto, BindingResult bindingResult) {
+    public ResponseEntity<Object> createTeam(@RequestHeader(name = "Authorization") String token,
+                                             @Valid @RequestBody TeamInputDto teamInputDto,
+                                             BindingResult bindingResult) {
         if (bindingResult.hasErrors()) {
             throw new BadRequestBindingException(bindingResult);
         }
