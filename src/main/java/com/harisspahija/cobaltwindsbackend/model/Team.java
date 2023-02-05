@@ -5,6 +5,7 @@ import jakarta.persistence.*;
 import org.hibernate.annotations.GenericGenerator;
 
 import java.time.LocalDate;
+import java.util.Collection;
 import java.util.List;
 
 @Entity
@@ -24,7 +25,7 @@ public class Team {
     @Column(name = "password")
     private String password;
 
-    @Column(name = "date_of_birth")
+    @Column(name = "logo")
     private String teamLogo;
 
     @Column(name = "biography")
@@ -44,6 +45,12 @@ public class Team {
 
     @OneToMany(mappedBy = "team", cascade = CascadeType.ALL)
     private List<Player> players;
+
+    @OneToMany(mappedBy = "team")
+    private Collection<CompetitionSignup> signups;
+
+    @OneToMany(mappedBy = "team")
+    private Collection<CompetitionRegistration> registrations;
 
     @Column(name = "open_roles")
     private List<Role> openRoles;
