@@ -1,51 +1,30 @@
-package com.harisspahija.cobaltwindsbackend.model;
+package com.harisspahija.cobaltwindsbackend.dto;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.harisspahija.cobaltwindsbackend.enums.CompetitionStatus;
-import jakarta.persistence.*;
-import org.hibernate.annotations.GenericGenerator;
+import com.harisspahija.cobaltwindsbackend.model.CompetitionRegistration;
 
 import java.time.LocalDate;
 import java.util.Collection;
 
-@Entity
-@Table(name = "Competitions")
-public class Competition {
-    @Id
-    @GenericGenerator(name = "uuid", strategy = "uuid2")
-    @GeneratedValue(generator = "uuid")
-    @SuppressWarnings("unused")
+public class CompetitionDto {
     private String id;
-
-    @Column(name = "name")
     private String name;
-
-    @Column(name = "logo")
     private String logo;
-
-    @Column(name = "description")
     private String description;
-
-    @Column(name = "max_team_count")
     private short maxTeamCount;
-
-    @Column(name = "start_date")
     private LocalDate startDate;
-
-    @Column(name = "registration_start_date")
     private LocalDate registrationDate;
-
-    @Column(name = "status")
     private CompetitionStatus status;
 
-    @OneToMany(mappedBy = "competition")
-    private Collection<CompetitionSignup> signups;
-
-    @OneToMany(mappedBy = "competition")
     private Collection<CompetitionRegistration> registrations;
 
     public String getId() {
         return id;
+    }
+
+    public void setId(String id) {
+        this.id = id;
     }
 
     public String getName() {
@@ -104,15 +83,7 @@ public class Competition {
         this.status = status;
     }
 
-    public Collection<CompetitionSignup> getSignups() {
-        return signups;
-    }
-
-    public void setSignups(Collection<CompetitionSignup> signups) {
-        this.signups = signups;
-    }
-
-    @JsonIgnore
+    @JsonIgnoreProperties({"signups", "registrations", "teamCaptain", "players", "competition" })
     public Collection<CompetitionRegistration> getRegistrations() {
         return registrations;
     }

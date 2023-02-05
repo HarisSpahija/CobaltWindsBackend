@@ -24,9 +24,6 @@ public class TeamDto {
     @JsonIgnoreProperties({"hibernateLazyInitializer", "team"})
     private List<Player> players;
 
-    public TeamDto() {
-    }
-
     public List<Player> getPlayers() {
         return players;
     }
