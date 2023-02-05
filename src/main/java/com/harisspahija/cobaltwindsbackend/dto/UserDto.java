@@ -9,10 +9,10 @@ import java.util.Collection;
 public class UserDto {
     private String id;
     private String email;
-    @JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
+    @JsonIgnoreProperties({"user"})
     private Collection<AuthRole> authRoles;
 
-    @JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
+    @JsonIgnoreProperties({"hibernateLazyInitializer", "team"})
     private Player playerProfile;
 
     public String getId() {

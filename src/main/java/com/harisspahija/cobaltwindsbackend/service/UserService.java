@@ -93,6 +93,16 @@ public class UserService {
         userRepository.save(user);
     }
 
+    private void removeAuthRoleFromUser(User user, String role) {
+        AuthRole playerAuthRole = authRoleRepository.findAuthRoleByAuthRoleName(role).orElseThrow(() -> new RepositoryNoRecordException(role));
+
+        Collection<AuthRole> userAuthRoles = user.getAuthRoles();
+        userAuthRoles.remove(playerAuthRole);
+
+        user.setAuthRoles(userAuthRoles);
+        userRepository.save(user);
+    }
+
     public void addPlayerToUsername(Player player, String username) {
         User user = userRepository.findUserByEmail(username).orElseThrow(() -> new RepositoryNoRecordException(username));
         addAuthRoleToUser(user, "PLAYER");
@@ -103,5 +113,15 @@ public class UserService {
     public void addRoleToUsername(String username, String role) {
         User user = userRepository.findUserByEmail(username).orElseThrow(() -> new RepositoryNoRecordException(username));
         addAuthRoleToUser(user, role);
+    }
+
+    public void addRoleToUserByPlayerId(String playerId, String role) {
+        User user = userRepository.findUserByPlayerProfileId(playerId).orElseThrow(() -> new RepositoryNoRecordException(playerId));
+        addAuthRoleToUser(user, role);
+    }
+
+    public void removeRoleFromUserByPlayerId(String playerId, String role) {
+        User user = userRepository.findUserByPlayerProfileId(playerId).orElseThrow(() -> new RepositoryNoRecordException(playerId));
+        removeAuthRoleFromUser(user, role);
     }
 }
