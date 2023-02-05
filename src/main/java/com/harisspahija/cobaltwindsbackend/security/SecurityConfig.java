@@ -81,7 +81,10 @@ public class SecurityConfig  {
                 // Teams Admin
                 .requestMatchers(HttpMethod.PUT, "/teams/*").hasAnyAuthority("ADMIN")
                 .requestMatchers(HttpMethod.DELETE, "/teams/*").hasAnyAuthority("ADMIN")
-
+                // Image uploading
+                .requestMatchers(HttpMethod.GET, "/images/info/*").permitAll()
+                .requestMatchers(HttpMethod.GET, "/images/*").permitAll()
+                .requestMatchers(HttpMethod.POST, "/images/").hasAuthority("ADMIN")
                 // Create new User
                 .requestMatchers(HttpMethod.POST, "/users").permitAll()
                 // Auth
